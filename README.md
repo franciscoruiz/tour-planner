@@ -3,6 +3,17 @@ tour-planner
 
 Prototype for a tour planning tool
 
+Some wiring needed...
+---------------------
+Add a `settings.js` file with your MongoLab API key:
+
+```javascript
+var SETTINGS = {
+  MONGOLAB_API_KEY: 'MyKey'
+};
+
+```
+
 Reference
 ---------
 Waypoints in directions - An example: https://developers.google.com/maps/documentation/javascript/examples/directions-waypoints
