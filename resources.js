@@ -2,7 +2,7 @@ angular.module('planner.resources', ['ngResource']).
   factory('Route', function ($resource) {
     var Route = $resource(
       'https://api.mongolab.com/api/1/databases/tour-planner/collections/routes/:id',
-      { apiKey: SETTINGS.MONGODB_API_KEY },
+      { apiKey: SETTINGS.MONGOLAB_API_KEY },
       { update: { method: 'PUT' } }
     );
 
