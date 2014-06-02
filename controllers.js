@@ -12,6 +12,13 @@ controllers.controller('RouteCtrl', function ($scope, mapService, retrieveRouteD
   this.showRoute = function (route) { mapService.addRoute(route); };
   this.hideRoute = function (route) { mapService.removeRoute(route); };
   this.isRouteOnMap = function (route) { return mapService.isRouteOnMap(route); };
+
+  this.deleteRoute = function (route) {
+    var routeName = route.name || "Unnamed route";
+    if (confirm("Delete \"" + routeName + "\"?")) {
+      route.destroy();
+    }
+  };
 });
 
 controllers.controller('NewRouteFormCtrl', function ($scope, mapService, Route) {

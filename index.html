@@ -42,6 +42,7 @@
             <a ng-if="controller.isRouteOnMap(route)" ng-click="controller.hideRoute(route)">[hide]</a>
             <a ng-if="!controller.isRouteOnMap(route)" ng-click="controller.showRoute(route)">[show]</a>
             <a ng-click="controller.showRouteDetails(route)">[details]</a>
+            <a ng-click="controller.deleteRoute(route)">[delete]</a>
             {{ route.name }}
           </li>
         </ul>
