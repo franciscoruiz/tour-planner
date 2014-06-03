@@ -21,6 +21,22 @@ controllers.controller('RouteCtrl', function ($scope, mapService, retrieveRouteD
       });
     }
   };
+
+
+  $scope.isEditingMode = false;
+
+  this.editRoute = function (route) {
+    $scope.isEditingMode = true;
+    $scope.edited = angular.copy(route);
+  };
+  this.saveRoute = function (route) {
+    $scope.isEditingMode = false;
+    angular.extend(route, $scope.edited);
+    route.$save();
+  };
+  this.cancelEditing = function (route) {
+    $scope.isEditingMode = false;
+  };
 });
 
 controllers.controller('NewRouteFormCtrl', function ($scope, mapService, Route) {
