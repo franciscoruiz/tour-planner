@@ -16,15 +16,31 @@ controllers.controller('RouteCtrl', function ($scope, mapService, retrieveRouteD
   this.deleteRoute = function (route) {
     var routeName = route.name || "Unnamed route";
     if (confirm("Delete \"" + routeName + "\"?")) {
-      route.destroy();
+      route.destroy(function (route) {
+        $scope.routes.splice($scope.routes.indexOf(route), 1);
+      });
     }
   };
 });
 
 controllers.controller('NewRouteFormCtrl', function ($scope, mapService, Route) {
-  $scope.route = new Route({origin: null, destination: null, waypoints: []});
+  $scope.route;
 
-  var directionsRenderer = null;
+  var directionsRenderer;
+
+
+  var reset = function () {
+    resetDirectionsRenderer();
+    $scope.route = new Route({origin: null, destination: null, waypoints: []});
+  };
+
+  var resetDirectionsRenderer = function () {
+    if (directionsRenderer) {
+      directionsRenderer.setMap(null);
+      directionsRenderer = null;
+    }
+    directionsRenderer = new google.maps.DirectionsRenderer({draggable: true});
+  };
 
   var updateWaypoints = function () {
     var waypoints = [];
@@ -54,10 +70,7 @@ controllers.controller('NewRouteFormCtrl', function ($scope, mapService, Route) 
     }, waypoints);
     route.waypoints = waypoints;
 
-    if (directionsRenderer) {
-      directionsRenderer.setMap(null);
-    }
-    directionsRenderer = new google.maps.DirectionsRenderer({draggable: true});
+    resetDirectionsRenderer();
     mapService.renderRoute(route, directionsRenderer).then(function () {
       google.maps.event.addListener(directionsRenderer, 'directions_changed', updateWaypoints);
     });
@@ -69,6 +82,10 @@ controllers.controller('NewRouteFormCtrl', function ($scope, mapService, Route) 
 
   this.saveRoute = function (route) {
     route.name = "From " + route.origin + " to " + route.destination;
-    route.$save();
+    route.$save(function (route) { $scope.routes.push(route); });
+
+    reset();
   };
+
+  reset();
 });

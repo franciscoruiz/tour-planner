@@ -36,7 +36,7 @@
         </form>
       </div>
       <div>
-        <h2>Routes</h2>
+        <h2>Routes ({{ routes.length }})</h2>
         <ul>
           <li ng-repeat="route in routes | orderBy:'bounds.southWest.lat'" ng-controller="RouteCtrl as controller">
             <a ng-if="controller.isRouteOnMap(route)" ng-click="controller.hideRoute(route)">[hide]</a>
