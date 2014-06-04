@@ -32,6 +32,7 @@ controllers.controller('RouteCtrl', function ($scope, mapService, retrieveRouteD
   };
   this.saveRoute = function () {
     $scope.isEditingMode = false;
+    angular.extend($scope.route, $scope.edited);
     $scope.route.$save();
   };
   this.cancelEditing = function () {
