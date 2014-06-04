@@ -98,6 +98,7 @@ controllers.controller('NewRouteFormCtrl', function ($scope, mapService, Route) 
 
   this.saveRoute = function (route) {
     route.name = "From " + route.origin + " to " + route.destination;
+    route.updateFromDirectionsResult(directionsRenderer.getDirections());
     route.$save(function (route) { $scope.routes.push(route); });
 
     reset();

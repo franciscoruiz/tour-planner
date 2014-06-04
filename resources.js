@@ -22,9 +22,9 @@ resources.factory('Route', function ($resource) {
 
     var routeDetails = directionsResult.routes[0];
 
-    route.bounds = convertBoundsToJSON(routeDetails.bounds);
+    this.bounds = convertBoundsToJSON(routeDetails.bounds);
 
-    route.legs = [];
+    this.legs = [];
     angular.forEach(routeDetails.legs, function (leg) {
       var legData = {
         distance: leg.distance.value,
@@ -50,9 +50,7 @@ resources.factory('Route', function ($resource) {
       }, legData.steps);
 
       this.push(legData);
-    }, route.legs);
-
-    this.update();
+    }, this.legs);
   };
 
   Route.prototype.destroy = function (callback) {
