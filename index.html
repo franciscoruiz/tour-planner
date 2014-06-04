@@ -39,17 +39,17 @@
         <h2>Routes ({{ routes.length }})</h2>
         <ul>
           <li ng-repeat="route in routes | orderBy:'bounds.southWest.lat'" ng-controller="RouteCtrl as controller">
-            <a ng-if="controller.isRouteOnMap(route)" ng-click="controller.hideRoute(route)">[hide]</a>
-            <a ng-if="!controller.isRouteOnMap(route)" ng-click="controller.showRoute(route)">[show]</a>
-            <a ng-click="controller.showRouteDetails(route)">[details]</a>
-            <a ng-click="controller.editRoute(route)">[edit]</a>
-            <a ng-click="controller.deleteRoute(route)">[delete]</a>
+            <a ng-if="controller.isRouteOnMap()" ng-click="controller.hideRoute()">[hide]</a>
+            <a ng-if="!controller.isRouteOnMap()" ng-click="controller.showRoute()">[show]</a>
+            <a ng-click="controller.showRouteDetails()">[details]</a>
+            <a ng-click="controller.editRoute()">[edit]</a>
+            <a ng-click="controller.deleteRoute()">[delete]</a>
             {{ route.name }}
             <form name="routeForm" ng-show="isEditingMode">
               <input name="name" ng-model="edited.name" required placeholder="Name">
               <textarea name="description" ng-model="edited.description" required placeholder="Description"></textarea>
-              <button ng-click="controller.saveRoute(route)" ng-disabled="!routeForm.$valid">Save</button>
-              <button ng-click="controller.cancelEditing(route)">Cancel</button>
+              <button ng-click="controller.saveRoute()" ng-disabled="!routeForm.$valid">Save</button>
+              <button ng-click="controller.cancelEditing()">Cancel</button>
             </form>
           </li>
         </ul>

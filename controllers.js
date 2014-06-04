@@ -6,35 +6,35 @@ controllers.controller('RoutesCtrl', function ($scope, Route) {
 });
 
 controllers.controller('RouteCtrl', function ($scope, mapService, retrieveRouteDirections) {
-  this.showRouteDetails = function (route) {
-    console.log(route);
+  this.showRouteDetails = function () {
+    console.log($scope.route);
   };
-  this.showRoute = function (route) { mapService.addRoute(route); };
-  this.hideRoute = function (route) { mapService.removeRoute(route); };
-  this.isRouteOnMap = function (route) { return mapService.isRouteOnMap(route); };
+  this.showRoute = function () { mapService.addRoute($scope.route); };
+  this.hideRoute = function () { mapService.removeRoute($scope.route); };
+  this.isRouteOnMap = function () { return mapService.isRouteOnMap($scope.route); };
 
-  this.deleteRoute = function (route) {
-    var routeName = route.name || "Unnamed route";
+  this.deleteRoute = function () {
+    var routeName = $scope.route.name || "Unnamed route";
     if (confirm("Delete \"" + routeName + "\"?")) {
-      route.destroy(function (route) {
-        $scope.routes.splice($scope.routes.indexOf(route), 1);
+      $scope.route.destroy(function () {
+        $scope.routes.splice($scope.routes.indexOf($scope.route), 1);
       });
     }
   };
 
+  // Editing-related logic
 
   $scope.isEditingMode = false;
 
-  this.editRoute = function (route) {
+  this.editRoute = function () {
     $scope.isEditingMode = true;
-    $scope.edited = angular.copy(route);
+    $scope.edited = angular.copy($scope.route);
   };
-  this.saveRoute = function (route) {
+  this.saveRoute = function () {
     $scope.isEditingMode = false;
-    angular.extend(route, $scope.edited);
-    route.$save();
+    $scope.route.$save();
   };
-  this.cancelEditing = function (route) {
+  this.cancelEditing = function () {
     $scope.isEditingMode = false;
   };
 });
