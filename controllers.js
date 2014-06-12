@@ -46,7 +46,8 @@ controllers.controller('NewRouteFormCtrl', function ($scope, mapService, Route) 
   var directionsRenderer;
 
 
-  var reset = function () {
+
+  this.reset = function () {
     resetDirectionsRenderer();
     $scope.route = new Route({origin: null, destination: null, waypoints: []});
   };
@@ -102,8 +103,8 @@ controllers.controller('NewRouteFormCtrl', function ($scope, mapService, Route) 
     route.updateFromDirectionsResult(directionsRenderer.getDirections());
     route.$save(function (route) { $scope.routes.push(route); });
 
-    reset();
+    this.reset();
   };
 
-  reset();
+  this.reset();
 });

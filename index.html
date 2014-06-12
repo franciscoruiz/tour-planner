@@ -32,6 +32,7 @@
             >
           <a ng-click="controller.addWaypoint(route)">Add waypoint</a>
           <button ng-click="controller.showRoute(route)" ng-disabled="!routeForm.$valid">Calculate</button>
+          <button ng-click="controller.reset()">Reset</button>
           <button ng-click="controller.saveRoute(route)">Save</button>
         </form>
       </div>
