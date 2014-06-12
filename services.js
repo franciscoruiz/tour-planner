@@ -83,6 +83,14 @@ mapServices.factory('mapService', function (retrieveRouteDirections) {
     return routeRenderer && routeRenderer.getMap();
   };
 
+  MapService.prototype.addEventListener = function (eventName, handler) {
+    return google.maps.event.addListener(this.map, eventName, handler);
+  };
+
+  MapService.prototype.removeEventListener = function (listener) {
+    return google.maps.event.removeListener(listener);
+  };
+
 
   var norway = new google.maps.LatLng(60.0, 7.0);
   var mapOptions = {

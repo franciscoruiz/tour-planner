@@ -45,6 +45,17 @@ controllers.controller('NewRouteFormCtrl', function ($scope, mapService, Route) 
 
   var directionsRenderer;
 
+  mapService.addEventListener('rightclick', function (event) {
+    $scope.$apply(function () {
+      if ($scope.route.origin === null) {
+        $scope.route.origin = event.latLng;
+      } else if ($scope.route.destination === null) {
+        $scope.route.destination = event.latLng;
+      } else {
+        $scope.route.waypoints.push({location: event.latLng, stopover: false});
+      }
+    });
+  });
 
 
   this.reset = function () {
