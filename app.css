@@ -17,7 +17,6 @@ html, body, #map-canvas {
   top: 10px;
   left: 10px;
   z-index: 99;
-  height: 100%;
 }
 
 .overmap_panel div {
