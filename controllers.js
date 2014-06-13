@@ -3,6 +3,10 @@ var controllers = angular.module('planner.controllers', []);
 
 controllers.controller('RoutesCtrl', function ($scope, Route) {
   $scope.routes = Route.query();
+
+  $scope.reloadRoutes = function () {
+    $scope.routes = Route.query();
+  };
 });
 
 controllers.controller('RouteCtrl', function ($scope, mapService, retrieveRouteDirections) {

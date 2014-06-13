@@ -38,6 +38,7 @@
       </div>
       <div>
         <h2>Routes ({{ routes.length }})</h2>
+        <a ng-click="reloadRoutes()">Reload</a>
         <ul>
           <li ng-repeat="route in routes | orderBy:'bounds.southWest.lat'" ng-controller="RouteCtrl as controller">
             <a ng-if="controller.isRouteOnMap()" ng-click="controller.hideRoute()">[hide]</a>
