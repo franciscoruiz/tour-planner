@@ -20,6 +20,9 @@ controllers.controller('RouteCtrl', function ($scope, mapService, retrieveRouteD
   this.deleteRoute = function () {
     var routeName = $scope.route.name || "Unnamed route";
     if (confirm("Delete \"" + routeName + "\"?")) {
+      if (this.isRouteOnMap()) {
+        this.hideRoute();
+      }
       $scope.route.destroy(function () {
         var routeIndex = $scope.routes.indexOf($scope.route);
         if (routeIndex === -1) {
