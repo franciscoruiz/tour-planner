@@ -88,11 +88,6 @@ controllers.controller('NewRouteFormCtrl', function ($scope, mapService, Route) 
         waypoints.push({location: waypoint.location, stopover: false});
       }
     );
-    if (!waypoints) {
-      console.debug("No waypoints");
-      return;
-    }
-    console.log("updateWaypoints", waypoints);
     $scope.$apply(function () {
       $scope.route.waypoints = waypoints;
     });
