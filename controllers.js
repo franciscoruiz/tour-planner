@@ -21,7 +21,12 @@ controllers.controller('RouteCtrl', function ($scope, mapService, retrieveRouteD
     var routeName = $scope.route.name || "Unnamed route";
     if (confirm("Delete \"" + routeName + "\"?")) {
       $scope.route.destroy(function () {
-        $scope.routes.splice($scope.routes.indexOf($scope.route), 1);
+        var routeIndex = $scope.routes.indexOf($scope.route);
+        if (routeIndex === -1) {
+          $log.error("Route not found in collection: %s", $scope.route._id)
+        } else {
+          $scope.routes.splice(routeIndex, 1);
+        }
       });
     }
   };
