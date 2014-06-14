@@ -31,9 +31,9 @@
             placeholder="Waypoint"
             >
           <a ng-click="controller.addWaypoint(route)">Add waypoint</a>
-          <button ng-click="controller.showRoute(route)" ng-disabled="!routeForm.$valid">Calculate</button>
+          <button ng-click="controller.showRoute(route)" ng-disabled="routeForm.$invalid">Calculate</button>
           <button ng-click="controller.reset()">Reset</button>
-          <button ng-click="controller.saveRoute(route)">Save</button>
+          <button ng-click="controller.saveRoute(route)" ng-disabled="routeForm.$invalid">Save</button>
         </form>
       </div>
       <div>
@@ -49,8 +49,8 @@
             {{ route.name }}
             <form name="routeForm" ng-show="isEditingMode">
               <input name="name" ng-model="edited.name" required placeholder="Name">
-              <textarea name="description" ng-model="edited.description" required placeholder="Description"></textarea>
-              <button ng-click="controller.saveRoute()" ng-disabled="!routeForm.$valid">Save</button>
+              <textarea name="description" ng-model="edited.description" placeholder="Description"></textarea>
+              <button ng-click="controller.saveRoute()" ng-disabled="routeForm.$invalid">Save</button>
               <button ng-click="controller.cancelEditing()">Cancel</button>
             </form>
           </li>
