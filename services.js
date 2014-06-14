@@ -6,6 +6,7 @@ mapServices.factory('retrieveRouteDirections', function ($q, $log) {
 
   var REQUEST_DEFAULT_OPTIONS = {
     optimizeWaypoints: false,
+    provideRouteAlternatives: false,
     travelMode: google.maps.TravelMode.DRIVING
   };
 
