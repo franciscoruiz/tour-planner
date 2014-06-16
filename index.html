@@ -30,7 +30,7 @@
             ng-model="waypoint.location"
             placeholder="Waypoint"
             >
-          <a ng-click="controller.addWaypoint(route)">Add waypoint</a>
+          <button ng-click="controller.addWaypoint(route)">Add waypoint</button>
           <button ng-click="controller.showRoute(route)" ng-disabled="routeForm.$invalid">Calculate</button>
           <button ng-click="controller.reset()">Reset</button>
           <button ng-click="controller.saveRoute(route)" ng-disabled="routeForm.$invalid">Save</button>
@@ -38,20 +38,45 @@
       </div>
       <div>
         <h2>Routes ({{ routes.length }})</h2>
-        <a ng-click="reloadRoutes()">Reload</a>
+        <button ng-click="reloadRoutes()">Reload</button>
         <ul>
-          <li ng-repeat="route in routes | orderBy:'bounds.southWest.lat'" ng-controller="RouteCtrl as controller">
-            <a ng-if="controller.isRouteOnMap()" ng-click="controller.hideRoute()">[hide]</a>
-            <a ng-if="!controller.isRouteOnMap()" ng-click="controller.showRoute()">[show]</a>
-            <a ng-click="controller.showRouteDetails()">[details]</a>
-            <a ng-click="controller.editRoute()">[edit]</a>
-            <a ng-click="controller.deleteRoute()">[delete]</a>
+          <li
+            ng-repeat="route in routes | orderBy:'bounds.southWest.lat'"
+            ng-controller="RouteCtrl as controller"
+            ng-init="showActions = false"
+          >
+            <button
+              ng-show="controller.isRouteOnMap()"
+              ng-click="controller.hideRoute()"
+              >hide</button>
+            <button
+              ng-show="!controller.isRouteOnMap()"
+              ng-click="controller.showRoute()"
+              >show</button>
+            <button
+              ng-show="!showActions"
+              ng-click="showActions = true"
+              >+</button>
+            <button
+              ng-show="showActions"
+              ng-click="showActions = false"
+              >-</button>
             {{ route.name }}
+            <div ng-show="showActions">
+              <button ng-click="controller.showRouteDetails()">details</button>
+              <button ng-click="controller.editRoute()">edit</button>
+              <button ng-click="controller.deleteRoute()" class="">delete</button>
+            </div>
             <form name="routeForm" ng-show="isEditingMode">
               <input name="name" ng-model="edited.name" required placeholder="Name">
               <textarea name="description" ng-model="edited.description" placeholder="Description"></textarea>
-              <button ng-click="controller.saveRoute()" ng-disabled="routeForm.$invalid">Save</button>
-              <button ng-click="controller.cancelEditing()">Cancel</button>
+              <button
+                ng-click="controller.saveRoute()"
+                ng-disabled="routeForm.$invalid"
+                >Save</button>
+              <button
+                ng-click="controller.cancelEditing()"
+                >Cancel</button>
             </form>
           </li>
         </ul>
