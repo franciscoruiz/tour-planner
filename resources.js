@@ -21,6 +21,10 @@ resources.factory('Route', function ($resource) {
     }
 
     var routeDetails = directionsResult.routes[0];
+    angular.forEach(this.waypoints, function (waypoint) {
+      filterObjectKeys(waypoint, ['location', 'stopover']);
+      waypoint.location = convertLatLngToJSON(waypoint.location);
+    });
 
     this.bounds = convertBoundsToJSON(routeDetails.bounds);
 
@@ -51,6 +55,11 @@ resources.factory('Route', function ($resource) {
 
       this.push(legData);
     }, this.legs);
+
+    var firstLeg = this.legs[0];
+    var lastLeg = this.legs.slice(-1)[0];
+    this.origin = firstLeg.start_address || firstLeg.start_location;
+    this.destination = lastLeg.end_address || lastLeg.end_location;
   };
 
   Route.prototype.destroy = function (callback) {
@@ -68,6 +77,14 @@ resources.factory('Route', function ($resource) {
     return {lat: latLng.lat(), lng: latLng.lng()};
   };
 
+  var filterObjectKeys = function (obj, keys) {
+    angular.forEach(obj, function (value, key) {
+      if (keys.indexOf(key) === -1) {
+        delete obj[key];
+      }
+    });
+    return obj;
+  };
 
   return Route;
 });
