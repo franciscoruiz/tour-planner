@@ -9,9 +9,9 @@ controllers.controller('RoutesCtrl', function ($scope, Route) {
   };
 });
 
-controllers.controller('RouteCtrl', function ($scope, mapService, retrieveRouteDirections) {
-  this.showRouteDetails = function () {
-    console.log($scope.route);
+controllers.controller('RouteCtrl', function ($scope, $log, mapService, retrieveRouteDirections) {
+  this.logRouteDetails = function () {
+    $log.debug($scope.route);
   };
   this.showRoute = function () { mapService.addRoute($scope.route); };
   this.hideRoute = function () { mapService.removeRoute($scope.route); };
