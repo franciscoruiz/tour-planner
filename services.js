@@ -81,7 +81,7 @@ mapServices.factory('mapService', function (retrieveRouteDirections) {
 
   MapService.prototype.isRouteOnMap = function (route) {
     var routeRenderer = this.getRouteRenderer(route);
-    return routeRenderer && routeRenderer.getMap();
+    return !!(routeRenderer && routeRenderer.getMap());
   };
 
   MapService.prototype.addEventListener = function (eventName, handler) {
