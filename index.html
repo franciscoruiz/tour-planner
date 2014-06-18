@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <title>Tour planner</title>
     <link rel="stylesheet" href="app.css">
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.10/angular.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.10/angular-resource.js"></script>
@@ -17,7 +18,6 @@
     <script src="resources.js"></script>
   </head>
   <body>
-    <div id="map-canvas"></div>
     <div class="overmap_panel" ng-controller="RoutesCtrl">
       <div>
         <h2>Add</h2>
@@ -37,35 +37,48 @@
         </form>
       </div>
       <div>
-        <h2>Routes ({{ routes.length }})</h2>
-        <button ng-click="reloadRoutes()">Reload</button>
+        <h2>
+          Routes ({{ routes.length }})
+          <button
+            ng-click="reloadRoutes()"
+            class="fa fa-lg fa-fw fa-refresh"
+            ></button>
+        </h2>
         <ul>
           <li
             ng-repeat="route in routes | orderBy:'bounds.southWest.lat'"
             ng-controller="RouteCtrl as controller"
-            ng-init="showActions = false"
           >
             <button
-              ng-show="controller.isRouteOnMap()"
-              ng-click="controller.hideRoute()"
-              >hide</button>
+              class="fa fa-lg fa-fw fa-ellipsis-v"
+              ng-init="showActions = false"
+              ng-click="showActions = !showActions"
+              ng-class="{'btn-on': showActions}"
+              ></button>
             <button
-              ng-show="!controller.isRouteOnMap()"
+              class="fa fa-lg fa-fw fa-map-marker"
               ng-click="controller.showRoute()"
-              >show</button>
+              ng-show="!controller.isRouteOnMap()"
+              ></button>
             <button
-              ng-show="!showActions"
-              ng-click="showActions = true"
-              >+</button>
-            <button
-              ng-show="showActions"
-              ng-click="showActions = false"
-              >-</button>
+              class="fa fa-lg fa-fw fa-map-marker btn-on"
+              ng-click="controller.hideRoute()"
+              ng-show="controller.isRouteOnMap()"
+              ></button>
             {{ route.name }}
             <div ng-show="showActions">
-              <button ng-click="controller.logRouteDetails()">print</button>
-              <button ng-click="controller.editRoute()">edit</button>
-              <button ng-click="controller.deleteRoute()" class="">delete</button>
+              <button
+                class="fa fa-lg fa-fw fa-print"
+                ng-click="controller.logRouteDetails()"
+                ></button>
+              <button
+                class="fa fa-lg fa-fw fa-pencil"
+                ng-click="controller.editRoute()"
+                ></button>
+              <button
+                class="fa fa-lg fa-fw fa-trash-o"
+                ng-click="controller.deleteRoute()"
+                ></button>
             </div>
             <form name="routeForm" ng-show="isEditingMode">
               <input name="name" ng-model="edited.name" required placeholder="Name">
@@ -82,5 +95,6 @@
         </ul>
       </div>
     </div>
+    <div id="map-canvas"></div>
   </body>
 </html>

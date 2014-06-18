@@ -17,6 +17,7 @@ html, body, #map-canvas {
   top: 10px;
   left: 10px;
   z-index: 99;
+  max-width: 320px;
 }
 
 .overmap_panel div {
@@ -44,4 +45,17 @@ ul {
 
 li {
   list-style-type: none;
+  line-height: 28px;
+  font-size: 1.1em;
+}
+
+button.fa {
+  background-color: inherit;
+  border: none;
+  padding-top: 3px;
+  color: lightgrey;
+}
+
+button.fa.btn-on {
+  color: darkgreen;
 }
