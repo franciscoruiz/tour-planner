@@ -15,6 +15,7 @@
     <script src="app.js"></script>
     <script src="services.js"></script>
     <script src="controllers.js"></script>
+    <script src="filters.js"></script>
     <script src="resources.js"></script>
   </head>
   <body>
@@ -76,6 +77,11 @@
                 ng-click="controller.editRoute()"
                 ></button>
               <button
+                class="fa fa-lg fa-fw fa-plus"
+                ng-init="showRouteSteps = false"
+                ng-click="showRouteSteps = !showRouteSteps"
+                ></button>
+              <button
                 class="fa fa-lg fa-fw fa-trash-o"
                 ng-click="controller.deleteRoute()"
                 ></button>
@@ -91,6 +97,18 @@
                 ng-click="controller.cancelEditing()"
                 >Cancel</button>
             </form>
+            <ul ng-if="showRouteSteps" class="route-steps">
+              <li
+                ng-repeat="step in controller.getRouteDirections(route)"
+                ng-click="controller.showDirectionsStep(step)"
+                class="route-step"
+                >
+                <i class="maneuver-{{ step.maneuver }}"></i>
+                {{ step.duration|displayDuration }} -
+                {{ step.distance|displayDistance }}
+                {{ step.instructions|htmlToText }}
+              </li>
+            </ul>
           </li>
         </ul>
       </div>

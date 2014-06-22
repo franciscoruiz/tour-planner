@@ -50,6 +50,37 @@ controllers.controller('RouteCtrl', function ($scope, $log, mapService, retrieve
   this.cancelEditing = function () {
     $scope.isEditingMode = false;
   };
+
+  // Directions-related logic
+
+  this.getRouteDirections = function (route) {
+    return route.legs[0].steps;
+  };
+
+  var MARKER_SYMBOL_CIRCLE = {
+    path: google.maps.SymbolPath.CIRCLE,
+    scale: 8,
+    strokeWeight: 4,
+    fillColor: 'white',
+    fillOpacity: 1
+  };
+
+  this.routeDirectionsMarker = new google.maps.Marker({
+    icon: MARKER_SYMBOL_CIRCLE,
+    map: mapService.map,
+    visible: false
+  });
+
+  this.showDirectionsStep = function (step) {
+    this.showRoute($scope.route);
+
+    this.routeDirectionsMarker.setPosition(step.start_location);
+    this.routeDirectionsMarker.setTitle(step.instructions);
+    this.routeDirectionsMarker.setVisible(true);
+
+    mapService.map.panTo(step.start_location);
+    mapService.map.setZoom(16);
+  };
 });
 
 controllers.controller('NewRouteFormCtrl', function ($scope, mapService, Route) {

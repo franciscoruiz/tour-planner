@@ -43,6 +43,8 @@ mapServices.factory('mapService', function (retrieveRouteDirections) {
     this.routeRenderers = {};
   };
 
+  // Directions
+
   MapService.prototype.addRoute = function (route) {
     if (this.isRouteOnMap(route)) {
       return;
@@ -83,6 +85,8 @@ mapServices.factory('mapService', function (retrieveRouteDirections) {
     var routeRenderer = this.getRouteRenderer(route);
     return !!(routeRenderer && routeRenderer.getMap());
   };
+
+  // Generic
 
   MapService.prototype.addEventListener = function (eventName, handler) {
     return google.maps.event.addListener(this.map, eventName, handler);

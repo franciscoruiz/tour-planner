@@ -59,3 +59,12 @@ button.fa {
 button.fa.btn-on {
   color: darkgreen;
 }
+
+.route-steps {
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
+
+.route-step {
+  font-size: 0.8em;
+}
