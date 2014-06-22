@@ -99,8 +99,8 @@
             </form>
             <ul ng-if="showRouteSteps" class="route-steps">
               <li
-                ng-repeat="step in controller.getRouteDirections(route)"
-                ng-click="controller.showDirectionsStep(step)"
+                ng-repeat="step in controller.getRouteSteps(route)"
+                ng-click="controller.showRouteStep(step)"
                 class="route-step"
                 >
                 <i class="maneuver-{{ step.maneuver }}"></i>

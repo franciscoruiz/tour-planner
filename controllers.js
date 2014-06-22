@@ -51,9 +51,9 @@ controllers.controller('RouteCtrl', function ($scope, $log, mapService, retrieve
     $scope.isEditingMode = false;
   };
 
-  // Directions-related logic
+  // Steps-related logic
 
-  this.getRouteDirections = function (route) {
+  this.getRouteSteps = function (route) {
     return route.legs[0].steps;
   };
 
@@ -65,18 +65,18 @@ controllers.controller('RouteCtrl', function ($scope, $log, mapService, retrieve
     fillOpacity: 1
   };
 
-  this.routeDirectionsMarker = new google.maps.Marker({
+  this.routeStepMarker = new google.maps.Marker({
     icon: MARKER_SYMBOL_CIRCLE,
     map: mapService.map,
     visible: false
   });
 
-  this.showDirectionsStep = function (step) {
+  this.showRouteStep = function (step) {
     this.showRoute($scope.route);
 
-    this.routeDirectionsMarker.setPosition(step.start_location);
-    this.routeDirectionsMarker.setTitle(step.instructions);
-    this.routeDirectionsMarker.setVisible(true);
+    this.routeStepMarker.setPosition(step.start_location);
+    this.routeStepMarker.setTitle(step.instructions);
+    this.routeStepMarker.setVisible(true);
 
     mapService.map.panTo(step.start_location);
     mapService.map.setZoom(16);
