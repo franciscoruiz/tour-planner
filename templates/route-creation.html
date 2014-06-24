@@ -1,0 +1,20 @@
+<div>
+  <h2>
+    <a href="#/" class="btn fa fa-lg fa-fw fa-long-arrow-left"></a>
+    Add
+  </h2>
+  <form name="routeForm">
+    <input name="origin" ng-model="route.origin" required placeholder="Origin">
+    <input name="destination" ng-model="route.destination" required placeholder="Destination">
+    <input
+      name="waypoints"
+      ng-repeat="waypoint in route.waypoints"
+      ng-model="waypoint.location"
+      placeholder="Waypoint"
+      >
+    <button ng-click="newRouteCtrl.addWaypoint()">Add waypoint</button>
+    <button ng-click="newRouteCtrl.showRoute()" ng-disabled="routeForm.$invalid">Calculate</button>
+    <button ng-click="newRouteCtrl.reset()">Reset</button>
+    <button ng-click="newRouteCtrl.saveRoute()" ng-disabled="routeForm.$invalid">Save</button>
+  </form>
+</div>

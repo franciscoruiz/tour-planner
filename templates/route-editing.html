@@ -1,0 +1,13 @@
+<div>
+  <form name="routeForm">
+    <input name="name" ng-model="edited.name" required placeholder="Name">
+    <textarea name="description" ng-model="edited.description" placeholder="Description"></textarea>
+    <button
+      ng-click="routeCtrl.saveRoute()"
+      ng-disabled="routeForm.$invalid"
+      >Save</button>
+    <button
+      ng-click="routeCtrl.cancelEditing()"
+      >Cancel</button>
+  </form>
+</div>

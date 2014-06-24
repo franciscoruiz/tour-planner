@@ -74,7 +74,13 @@ resources.factory('Route', function ($resource) {
   };
 
   var convertLatLngToJSON = function (latLng) {
-    return {lat: latLng.lat(), lng: latLng.lng()};
+    var jsonValue;
+    if (latLng instanceof google.maps.LatLng) {
+      jsonValue = {lat: latLng.lat(), lng: latLng.lng()};
+    } else {
+      jsonValue = latLng;
+    }
+    return jsonValue;
   };
 
   var filterObjectKeys = function (obj, keys) {

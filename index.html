@@ -7,8 +7,9 @@
     <link rel="stylesheet" href="app.css">
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.10/angular.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.10/angular-resource.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.13/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.13/angular-resource.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.13/angular-route.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.16&sensor=false"></script>
 
     <script src="settings.js"></script>
@@ -19,100 +20,7 @@
     <script src="resources.js"></script>
   </head>
   <body>
-    <div class="overmap_panel" ng-controller="RoutesCtrl">
-      <div>
-        <h2>Add</h2>
-        <form name="routeForm" ng-controller="NewRouteFormCtrl as controller">
-          <input name="origin" ng-model="route.origin" required placeholder="Origin">
-          <input name="destination" ng-model="route.destination" required placeholder="Destination">
-          <input
-            name="waypoints"
-            ng-repeat="waypoint in route.waypoints"
-            ng-model="waypoint.location"
-            placeholder="Waypoint"
-            >
-          <button ng-click="controller.addWaypoint(route)">Add waypoint</button>
-          <button ng-click="controller.showRoute(route)" ng-disabled="routeForm.$invalid">Calculate</button>
-          <button ng-click="controller.reset()">Reset</button>
-          <button ng-click="controller.saveRoute(route)" ng-disabled="routeForm.$invalid">Save</button>
-        </form>
-      </div>
-      <div>
-        <h2>
-          Routes ({{ routes.length }})
-          <button
-            ng-click="reloadRoutes()"
-            class="fa fa-lg fa-fw fa-refresh"
-            ></button>
-        </h2>
-        <ul>
-          <li
-            ng-repeat="route in routes | orderBy:'bounds.southWest.lat'"
-            ng-controller="RouteCtrl as controller"
-          >
-            <button
-              class="fa fa-lg fa-fw fa-ellipsis-v"
-              ng-init="showActions = false"
-              ng-click="showActions = !showActions"
-              ng-class="{'btn-on': showActions}"
-              ></button>
-            <button
-              class="fa fa-lg fa-fw fa-map-marker"
-              ng-click="controller.showRoute()"
-              ng-show="!controller.isRouteOnMap()"
-              ></button>
-            <button
-              class="fa fa-lg fa-fw fa-map-marker btn-on"
-              ng-click="controller.hideRoute()"
-              ng-show="controller.isRouteOnMap()"
-              ></button>
-            {{ route.name }}
-            <div ng-show="showActions">
-              <button
-                class="fa fa-lg fa-fw fa-print"
-                ng-click="controller.logRouteDetails()"
-                ></button>
-              <button
-                class="fa fa-lg fa-fw fa-pencil"
-                ng-click="controller.editRoute()"
-                ></button>
-              <button
-                class="fa fa-lg fa-fw fa-plus"
-                ng-init="showRouteSteps = false"
-                ng-click="showRouteSteps = !showRouteSteps"
-                ></button>
-              <button
-                class="fa fa-lg fa-fw fa-trash-o"
-                ng-click="controller.deleteRoute()"
-                ></button>
-            </div>
-            <form name="routeForm" ng-show="isEditingMode">
-              <input name="name" ng-model="edited.name" required placeholder="Name">
-              <textarea name="description" ng-model="edited.description" placeholder="Description"></textarea>
-              <button
-                ng-click="controller.saveRoute()"
-                ng-disabled="routeForm.$invalid"
-                >Save</button>
-              <button
-                ng-click="controller.cancelEditing()"
-                >Cancel</button>
-            </form>
-            <ul ng-if="showRouteSteps" class="route-steps">
-              <li
-                ng-repeat="step in controller.getRouteSteps(route)"
-                ng-click="controller.showRouteStep(step)"
-                class="route-step"
-                >
-                <i class="maneuver-{{ step.maneuver }}"></i>
-                {{ step.duration|displayDuration }} -
-                {{ step.distance|displayDistance }}
-                {{ step.instructions|htmlToText }}
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-    </div>
+    <div class="overmap_panel" ng-view></div>
     <div id="map-canvas"></div>
   </body>
 </html>

@@ -1,0 +1,30 @@
+<div>
+  <h2>
+    Routes ({{ routes.length }})
+    <button
+      ng-click="reloadRoutes()"
+      class="fa fa-lg fa-fw fa-refresh"
+      ></button>
+    <a href="#/new-route/" class="btn fa fa-lg fa-fw fa-plus"></a>
+  </h2>
+  <ul>
+    <li
+      ng-repeat="route in routes | orderBy:'bounds.southWest.lat'"
+      ng-controller="RouteCtrl as routeCtrl"
+      >
+      <button
+        class="fa fa-lg fa-fw fa-map-marker"
+        ng-click="routeCtrl.showRoute()"
+        ng-show="!routeCtrl.isRouteOnMap()"
+        ></button>
+      <button
+        class="fa fa-lg fa-fw fa-map-marker btn-on"
+        ng-click="routeCtrl.hideRoute()"
+        ng-show="routeCtrl.isRouteOnMap()"
+        ></button>
+      <a href="#/routes/{{ route|getRouteId }}">
+        {{ route.name }}
+      </a>
+    </li>
+  </ul>
+</div>

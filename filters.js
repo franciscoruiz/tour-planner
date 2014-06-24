@@ -22,3 +22,10 @@ filters.filter('htmlToText', function () {
     return String(instructions).replace(/<[^>]+>/gm, '');
   };
 });
+
+
+filters.filter('getRouteId', function () {
+  return function (route) {
+    return route._id.$oid;
+  };
+});
