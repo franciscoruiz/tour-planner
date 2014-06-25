@@ -46,10 +46,6 @@ controllers.controller('RouteCtrl', function ($scope, $log, $location, mapServic
 
   // Steps-related logic
 
-  this.getRouteSteps = function () {
-    return $scope.route.legs[0].steps;
-  };
-
   var MARKER_SYMBOL_CIRCLE = {
     path: google.maps.SymbolPath.CIRCLE,
     scale: 8,

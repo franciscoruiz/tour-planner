@@ -2,6 +2,9 @@
   <h2>
     <a href="#/" class="btn fa fa-lg fa-fw fa-long-arrow-left"></a>
     {{ route.name }}
+  </h2>
+
+  <div>
     <button
       class="fa fa-lg fa-fw fa-map-marker"
       ng-click="routeCtrl.showRoute()"
@@ -12,9 +15,7 @@
       ng-click="routeCtrl.hideRoute()"
       ng-show="routeCtrl.isRouteOnMap()"
       ></button>
-  </h2>
 
-  <div>
     <button
       class="fa fa-lg fa-fw fa-print"
       ng-click="routeCtrl.logRouteDetails()"
@@ -29,9 +30,23 @@
       ></button>
   </div>
 
+  <div>
+    {{ route|getRouteDuration|displayDuration }} - {{ route|getRouteDistance|displayDistance }}
+  </div>
+
+  <div ng-if="route.url">
+    <a href="{{ route.url }}" target="_blank" rel="nofollow">
+      {{ route.url }}
+    </a>
+  </div>
+
+  <div ng-if="route.description">
+    {{ route.description }}
+  </div>
+
   <ol class="route-steps">
     <li
-      ng-repeat="step in routeCtrl.getRouteSteps()"
+      ng-repeat="step in route|getRouteSteps"
       ng-click="routeCtrl.showRouteStep(step)"
       class="route-step"
       >

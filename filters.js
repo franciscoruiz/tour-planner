@@ -17,6 +17,30 @@ filters.filter('displayDuration', function () {
 });
 
 
+filters.filter('getRouteDistance', function ($filter) {
+  return function (route) {
+    var distance = 0;
+    var steps = $filter('getRouteSteps')(route);
+    angular.forEach(steps, function (step) {
+      distance += step.distance;
+    });
+    return distance;
+  };
+});
+
+
+filters.filter('getRouteDuration', function ($filter) {
+  return function (route) {
+    var duration = 0;
+    var steps = $filter('getRouteSteps')(route);
+    angular.forEach(steps, function (step) {
+      duration += step.duration;
+    });
+    return duration;
+  };
+});
+
+
 filters.filter('htmlToText', function () {
   return function (instructions) {
     return String(instructions).replace(/<[^>]+>/gm, '');
@@ -27,5 +51,12 @@ filters.filter('htmlToText', function () {
 filters.filter('getRouteId', function () {
   return function (route) {
     return route._id.$oid;
+  };
+});
+
+
+filters.filter('getRouteSteps', function () {
+  return function (route) {
+    return route.legs[0].steps;
   };
 });
