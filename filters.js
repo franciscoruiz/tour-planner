@@ -3,7 +3,14 @@ var filters = angular.module('planner.filters', []);
 
 filters.filter('displayDistance', function () {
   return function (meters) {
-    return '' + meters / 1000 + 'km';
+    var distanceText;
+    if (meters < 1000) {
+      distanceText = meters.toString() + 'm';
+    } else {
+      var kilometers = meters / 1000;
+      distanceText = kilometers.toString() + 'km';
+    }
+    return distanceText;
   };
 });
 
@@ -17,10 +24,9 @@ filters.filter('displayDuration', function () {
 });
 
 
-filters.filter('getRouteDistance', function ($filter) {
-  return function (route) {
+filters.filter('getStepsDistance', function ($filter) {
+  return function (steps) {
     var distance = 0;
-    var steps = $filter('getRouteSteps')(route);
     angular.forEach(steps, function (step) {
       distance += step.distance;
     });
@@ -29,10 +35,9 @@ filters.filter('getRouteDistance', function ($filter) {
 });
 
 
-filters.filter('getRouteDuration', function ($filter) {
-  return function (route) {
+filters.filter('getStepsDuration', function ($filter) {
+  return function (steps) {
     var duration = 0;
-    var steps = $filter('getRouteSteps')(route);
     angular.forEach(steps, function (step) {
       duration += step.duration;
     });
@@ -57,6 +62,7 @@ filters.filter('getRouteId', function () {
 
 filters.filter('getRouteSteps', function () {
   return function (route) {
-    return route.legs[0].steps;
+    var steps = route.legs.reduce(function (a, b) { return a.concat(b.steps); }, []);
+    return steps;
   };
 });

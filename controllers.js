@@ -32,6 +32,10 @@ controllers.controller('RouteCtrl', function ($scope, $log, $location, mapServic
     return mapService.isRouteOnMap($scope.route);
   };
 
+  this.saveRoute = function () {
+    $scope.route.$save();
+  };
+
   this.deleteRoute = function () {
     var routeName = $scope.route.name || "Unnamed route";
     if (confirm("Delete \"" + routeName + "\"?")) {
@@ -45,6 +49,13 @@ controllers.controller('RouteCtrl', function ($scope, $log, $location, mapServic
   };
 
   // Steps-related logic
+
+  this.breakLeg = function (leg, step) {
+    var legIndex = $scope.route.legs.indexOf(leg);
+    var stepIndex = leg.steps.indexOf(step);
+    var steps = leg.steps.splice(stepIndex, leg.steps.length - stepIndex);
+    $scope.route.legs.splice(legIndex + 1, 0, {summary: 'New', steps: steps});
+  };
 
   var MARKER_SYMBOL_CIRCLE = {
     path: google.maps.SymbolPath.CIRCLE,
@@ -70,6 +81,7 @@ controllers.controller('RouteCtrl', function ($scope, $log, $location, mapServic
     mapService.map.panTo(step.start_location);
     mapService.map.setZoom(16);
   };
+
 });
 
 

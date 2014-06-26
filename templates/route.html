@@ -31,7 +31,7 @@
   </div>
 
   <div>
-    {{ route|getRouteDuration|displayDuration }} - {{ route|getRouteDistance|displayDistance }}
+    {{ route|getRouteSteps|getStepsDuration|displayDuration }} - {{ route|getRouteSteps|getStepsDistance|displayDistance }}
   </div>
 
   <div ng-if="route.url">
@@ -44,16 +44,53 @@
     {{ route.description }}
   </div>
 
-  <ol class="route-steps">
-    <li
-      ng-repeat="step in route|getRouteSteps"
-      ng-click="routeCtrl.showRouteStep(step)"
-      class="route-step"
-      >
-      <i class="maneuver-{{ step.maneuver }}"></i>
-      {{ step.duration|displayDuration }} -
-      {{ step.distance|displayDistance }}
-      {{ step.instructions|htmlToText }}
+  <h3>
+    Directions
+    <button
+      class="btn fa fa-lg fa-fw fa-floppy-o"
+      ng-click="routeCtrl.saveRoute()"
+    ></button>
+  </h3>
+  <ol class="route-legs">
+    <li ng-repeat="leg in route.legs" class="route-leg">
+      {{ leg.summary }}
+      <div>
+        {{ leg.steps|getStepsDuration|displayDuration }} -
+        {{ leg.steps|getStepsDistance|displayDistance }}
+        <button
+          class="btn fa fa-lg fa-fw fa-angle-down"
+          ng-init="displaySteps = false"
+          ng-click="displaySteps = true"
+          ng-hide="displaySteps"
+        ></button>
+        <button
+          class="btn fa fa-lg fa-fw fa-angle-up"
+          ng-click="displaySteps = false"
+          ng-show="displaySteps"
+        ></button>
+      </div>
+      <ol class="route-steps" ng-show="displaySteps">
+        <li
+          ng-repeat="step in leg.steps"
+          ng-click="routeCtrl.showRouteStep(step)"
+          class="route-step"
+          ng-init="displayBreakLeg = false"
+          ng-mouseenter="displayBreakLeg = true"
+          ng-mouseleave="displayBreakLeg = false"
+          >
+          <i class="maneuver-{{ step.maneuver }}"></i>
+          {{ step.instructions|htmlToText }}
+          <div class="route-step-summary">
+            {{ step.duration|displayDuration }} -
+            {{ step.distance|displayDistance }}
+            <button
+              ng-show="displayBreakLeg"
+              class="btn fa fa-lg fa-fw fa-chain-broken"
+              ng-click="routeCtrl.breakLeg(leg, step)"
+            ></button>
+          </div>
+        </li>
+      </ol>
     </li>
   </ol>
 </div>
