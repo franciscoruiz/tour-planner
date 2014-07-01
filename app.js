@@ -24,5 +24,15 @@ angular.module('planner', [
       controller: 'RouteEditCtrl',
       controllerAs: 'routeEditCtrl'
     })
+    .when('/routes/:route/navigate/', {
+      templateUrl: 'templates/navigation.html',
+      controller: 'RouteNavigationCtrl',
+      controllerAs: 'routeCtrl'
+    })
+    .when('/routes/:route/roadbook/', {
+      templateUrl: 'templates/roadbook.html',
+      controller: 'RouteRoadBookCtrl',
+      controllerAs: 'routeCtrl'
+    })
     .otherwise({redirectTo: '/routes/'});
 });

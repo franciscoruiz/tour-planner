@@ -1,0 +1,15 @@
+<div ng-if="route" class="roadbook">
+  <ol>
+    <li ng-repeat="leg in route.legs">
+      <i ng-if="leg.steps[0].maneuver" class="maneuver-{{ leg.steps[0].maneuver }}"></i>
+      {{ leg.steps[0].instructions }}
+      <div ng-if="currentLocation">
+        {{ routeCtrl.calculateDistance(leg.steps[0].start_location, currentLocation)|displayDistance }}
+      </div>
+      <div>
+        {{ leg.steps|getStepsDuration|displayDuration }} -
+        {{ leg.steps|getStepsDistance|displayDistance }}
+      </div>
+    </li>
+  </ol>
+</div>

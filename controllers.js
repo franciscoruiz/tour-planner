@@ -181,3 +181,49 @@ controllers.controller('NewRouteCtrl', function ($scope, $location, $filter, map
 
   this.reset();
 });
+
+
+controllers.controller('RouteRoadBookCtrl', function ($scope, $routeParams, Route) {
+  Route.get({id: $routeParams.route}, function (route) {
+    $scope.route = route;
+  });
+
+  function geo_success(position) {
+    console.log(position);
+    $scope.$apply(function () {
+      $scope.currentLocation = {lat: position.coords.latitude, lng: position.coords.longitude};
+    });
+  }
+
+  function geo_error() {
+    alert("Sorry, no position available.");
+  }
+
+  var geo_options = {
+    enableHighAccuracy: true, 
+    maximumAge        : 30000, 
+    timeout           : 27000
+  };
+
+  var wpid = navigator.geolocation.watchPosition(geo_success, geo_error, geo_options);
+
+  var degreesToRadians = function (degrees) {
+    return degrees * (Math.PI / 180);
+  };
+
+  this.calculateDistance = function (position1, position2) {
+    // Extracted from http://www.movable-type.co.uk/scripts/latlong.html
+    var R = 6371 * 1000; // m
+
+    var φ1 = degreesToRadians(position1.lat);
+    var λ1 = degreesToRadians(position1.lng);
+    
+    var φ2 = degreesToRadians(position2.lat);
+    var λ2 = degreesToRadians(position2.lng);
+    
+    var x = (λ2 - λ1) * Math.cos((φ1+φ2)/2);
+    var y = (φ2 - φ1);
+    var d = Math.sqrt(x*x + y*y) * R;
+    return d;
+  };
+});

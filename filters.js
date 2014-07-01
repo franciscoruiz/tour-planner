@@ -3,13 +3,15 @@ var filters = angular.module('planner.filters', []);
 
 filters.filter('displayDistance', function () {
   return function (meters) {
-    var distanceText;
+    var distance, unit;
     if (meters < 1000) {
-      distanceText = meters.toString() + 'm';
+      distance = meters;
+      unit = 'm';
     } else {
-      var kilometers = meters / 1000;
-      distanceText = kilometers.toString() + 'km';
+      distance = meters / 1000;
+      unit = 'km';
     }
+    var distanceText = Math.round(distance).toString() + unit;
     return distanceText;
   };
 });
