@@ -18,7 +18,7 @@ controllers.controller('RouteViewCtrl', function ($scope, $routeParams, Route) {
 });
 
 
-controllers.controller('RouteCtrl', function ($scope, $log, $location, mapService, Route, retrieveRouteDirections) {
+controllers.controller('RouteCtrl', function ($scope, $log, $location, mapService, Route) {
   this.logRouteDetails = function () {
     $log.debug($scope.route);
   };
@@ -85,7 +85,7 @@ controllers.controller('RouteCtrl', function ($scope, $log, $location, mapServic
 });
 
 
-controllers.controller('RouteEditCtrl', function ($scope, $log, $route, mapService, Route, retrieveRouteDirections) {
+controllers.controller('RouteEditCtrl', function ($scope, $log, $route, mapService, Route) {
   var currentRouteId = $route.current.params.route;
 
   $scope.route = Route.$get({_id: {$oid: currentRouteId}})
