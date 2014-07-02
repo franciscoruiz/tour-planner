@@ -111,15 +111,13 @@ controllers.controller('NewRouteCtrl', function ($scope, $location, $filter, map
   var directionsRenderer;
 
   mapService.addEventListener('rightclick', function (event) {
-    $scope.$apply(function () {
-      if ($scope.route.origin === null) {
-        $scope.route.origin = event.latLng;
-      } else if ($scope.route.destination === null) {
-        $scope.route.destination = event.latLng;
-      } else {
-        $scope.route.waypoints.push({location: event.latLng, stopover: false});
-      }
-    });
+    if ($scope.route.origin === null) {
+      $scope.route.origin = event.latLng;
+    } else if ($scope.route.destination === null) {
+      $scope.route.destination = event.latLng;
+    } else {
+      $scope.route.waypoints.push({location: event.latLng, stopover: false});
+    }
   });
 
   this.reset = function () {
@@ -143,9 +141,7 @@ controllers.controller('NewRouteCtrl', function ($scope, $location, $filter, map
         waypoints.push({location: waypoint.location, stopover: false});
       }
     );
-    $scope.$apply(function () {
-      $scope.route.waypoints = waypoints;
-    });
+    $scope.route.waypoints = waypoints;
   };
 
   this.showRoute = function () {

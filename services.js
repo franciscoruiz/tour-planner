@@ -35,7 +35,7 @@ mapServices.factory('retrieveRouteDirections', function ($q, $log) {
   return retrieveRouteDirections;
 });
 
-mapServices.factory('mapService', function (retrieveRouteDirections) {
+mapServices.factory('mapService', function ($rootScope, retrieveRouteDirections) {
 
   var MapService = function (element, options) {
     this.map = new google.maps.Map(element, options);
@@ -89,7 +89,12 @@ mapServices.factory('mapService', function (retrieveRouteDirections) {
   // Generic
 
   MapService.prototype.addEventListener = function (eventName, handler) {
-    return google.maps.event.addListener(this.map, eventName, handler);
+    return google.maps.event.addListener(this.map, eventName, function () {
+      var handlerArguments = arguments;
+      $rootScope.$apply(function () {
+        handler.apply({}, handlerArguments);
+      });
+    });
   };
 
   MapService.prototype.removeEventListener = function (listener) {
