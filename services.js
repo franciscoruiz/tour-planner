@@ -20,12 +20,12 @@ mapServices.factory('retrieveRouteDirections', function ($q, $log) {
     };
 
     var request = angular.extend({}, REQUEST_DEFAULT_OPTIONS, routeParameters);
-    directionsService.route(request, function (response, status) {
-      if (status == google.maps.DirectionsStatus.OK) {
-        deferred.resolve(response);
+    directionsService.route(request, function (directionsResult, directionsStatus) {
+      if (directionsStatus == google.maps.DirectionsStatus.OK) {
+        deferred.resolve(directionsResult);
       } else {
-        deferred.reject(response, status);
-        $log.log(status, route);
+        deferred.reject(directionsResult, directionsStatus);
+        $log.log(directionsStatus, route);
       }
     });
 
@@ -56,8 +56,8 @@ mapServices.factory('mapService', function (retrieveRouteDirections) {
 
   MapService.prototype.renderRoute = function (route, renderer) {
     var self = this;
-    return retrieveRouteDirections(route).then(function (response) {
-      renderer.setDirections(response);
+    return retrieveRouteDirections(route).then(function (directionsResult) {
+      renderer.setDirections(directionsResult);
       renderer.setMap(self.map);
     });
   };
