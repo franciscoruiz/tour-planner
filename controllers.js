@@ -106,23 +106,15 @@ controllers.controller('RouteEditCtrl', function ($scope, $log, $route, mapServi
 
 
 controllers.controller('NewRouteCtrl', function ($scope, $location, $filter, mapService, Route) {
-  $scope.route;
+  $scope.origin;
+  $scope.points;
 
   var directionsRenderer;
 
-  mapService.addEventListener('rightclick', function (event) {
-    if ($scope.route.origin === null) {
-      $scope.route.origin = event.latLng;
-    } else if ($scope.route.destination === null) {
-      $scope.route.destination = event.latLng;
-    } else {
-      $scope.route.waypoints.push({location: event.latLng, stopover: false});
-    }
-  });
-
   this.reset = function () {
     resetDirectionsRenderer();
-    $scope.route = new Route({origin: null, destination: null, waypoints: []});
+    $scope.origin = null;
+    $scope.points = [];
   };
 
   var resetDirectionsRenderer = function () {
@@ -133,47 +125,50 @@ controllers.controller('NewRouteCtrl', function ($scope, $location, $filter, map
     directionsRenderer = new google.maps.DirectionsRenderer({draggable: true});
   };
 
-  var updateWaypoints = function () {
-    var waypoints = [];
-    angular.forEach(
-      directionsRenderer.directions.Tb.waypoints,
-      function (waypoint) {
-        waypoints.push({location: waypoint.location, stopover: false});
-      }
-    );
-    $scope.route.waypoints = waypoints;
-  };
-
   this.showRoute = function () {
+    var destination = $scope.points[$scope.points.length - 1].location;
+    var intermediatePoints = $scope.points.slice(0, -1);
     var waypoints = [];
-    angular.forEach($scope.route.waypoints, function (waypoint) {
-      if (!waypoint.location) {
+    angular.forEach(intermediatePoints, function (point) {
+      if (!point.location) {
         return;
       }
-      this.push({location: waypoint.location, stopover: waypoint.stopover});
-    }, waypoints);
-    $scope.route.waypoints = waypoints;
+      waypoints.push({location: point.location, stopover: false});
+    });
 
     resetDirectionsRenderer();
-    mapService.renderRoute($scope.route, directionsRenderer).then(function () {
-      google.maps.event.addListener(directionsRenderer, 'directions_changed', updateWaypoints);
-    });
+    mapService.renderDirections($scope.origin, destination, waypoints, directionsRenderer);
   };
 
-  this.addWaypoint = function () {
-    $scope.route.waypoints.push({location: '', stopover: false});
+  this.addPoint = function () {
+    $scope.points.push(new Point());
   };
 
   this.saveRoute = function () {
-    $scope.route.updateFromDirectionsResult(directionsRenderer.getDirections());
-    $scope.route.name = "From " + $scope.route.origin + " to " + $scope.route.destination;
-    $scope.route.$save(function (route) {
+    var route = new Route();
+    route.updateFromDirectionsResult(directionsRenderer.getDirections());
+    route.name = "From " + route.origin + " to " + route.destination;
+    route.$save(function (route) {
       var routeId = $filter('getRouteId')(route);
       $location.path('/routes/' + routeId);
     });
 
     this.reset();
   };
+
+  var Point = function (location) {
+    this.location = location;
+  };
+
+  mapService.addEventListener('rightclick', function (event) {
+    var location = event.latLng;
+    if (!$scope.origin) {
+      $scope.origin = location;
+    } else {
+      $scope.points.push(new Point(location));
+    }
+  });
+
 
   this.reset();
 });

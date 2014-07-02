@@ -4,15 +4,9 @@
     Add
   </h2>
   <form name="routeForm">
-    <input name="origin" ng-model="route.origin" required placeholder="Origin">
-    <input name="destination" ng-model="route.destination" required placeholder="Destination">
-    <input
-      name="waypoints"
-      ng-repeat="waypoint in route.waypoints"
-      ng-model="waypoint.location"
-      placeholder="Waypoint"
-      >
-    <button ng-click="newRouteCtrl.addWaypoint()">Add waypoint</button>
+    <input name="origin" ng-model="origin" required>
+    <input ng-repeat="point in points" ng-model="point.location">
+    <button ng-click="newRouteCtrl.addPoint()">Add waypoint</button>
     <button ng-click="newRouteCtrl.showRoute()" ng-disabled="routeForm.$invalid">Calculate</button>
     <button ng-click="newRouteCtrl.reset()">Reset</button>
     <button ng-click="newRouteCtrl.saveRoute()" ng-disabled="routeForm.$invalid">Save</button>

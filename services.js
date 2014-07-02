@@ -1,7 +1,7 @@
 
 var mapServices = angular.module('map.services', []);
 
-mapServices.factory('retrieveRouteDirections', function ($q, $log) {
+mapServices.factory('directionsService', function ($q, $log) {
   var directionsService = new google.maps.DirectionsService();
 
   var REQUEST_DEFAULT_OPTIONS = {
@@ -10,13 +10,13 @@ mapServices.factory('retrieveRouteDirections', function ($q, $log) {
     travelMode: google.maps.TravelMode.DRIVING
   };
 
-  var retrieveRouteDirections = function (route) {
+  var retrieveDirections = function (origin, destination, waypoints) {
     var deferred = $q.defer();
 
     var routeParameters = {
-      origin: route.origin,
-      destination: route.destination,
-      waypoints: route.waypoints
+      origin: origin,
+      destination: destination,
+      waypoints: waypoints
     };
 
     var request = angular.extend({}, REQUEST_DEFAULT_OPTIONS, routeParameters);
@@ -25,17 +25,17 @@ mapServices.factory('retrieveRouteDirections', function ($q, $log) {
         deferred.resolve(directionsResult);
       } else {
         deferred.reject(directionsResult, directionsStatus);
-        $log.log(directionsStatus, route);
+        $log.log(directionsStatus, request);
       }
     });
 
     return deferred.promise;
   };
 
-  return retrieveRouteDirections;
+  return {route: retrieveDirections};
 });
 
-mapServices.factory('mapService', function ($rootScope, retrieveRouteDirections) {
+mapServices.factory('mapService', function ($rootScope, directionsService) {
 
   var MapService = function (element, options) {
     this.map = new google.maps.Map(element, options);
@@ -55,11 +55,17 @@ mapServices.factory('mapService', function ($rootScope, retrieveRouteDirections)
   };
 
   MapService.prototype.renderRoute = function (route, renderer) {
+    return this.renderDirections(route.origin, route.destination, route.waypoints, renderer);
+  };
+
+  MapService.prototype.renderDirections = function (origin, destination, waypoints, renderer) {
     var self = this;
-    return retrieveRouteDirections(route).then(function (directionsResult) {
+    var directionsResultPromise = directionsService.route(origin, destination, waypoints);
+    directionsResultPromise.then(function (directionsResult) {
       renderer.setDirections(directionsResult);
       renderer.setMap(self.map);
     });
+    return directionsResultPromise;
   };
 
   MapService.prototype.removeRoute = function (route) {
