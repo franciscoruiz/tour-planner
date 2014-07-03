@@ -29,6 +29,11 @@ angular.module('planner', [
       templateUrl: 'templates/map-creation.html',
       controller: 'NewMapCtrl',
       controllerAs: 'newMapCtrl'
+    })
+    .when('/maps/', {
+      templateUrl: 'templates/maps.html',
+      controller: 'MapsCtrl',
+      controllerAs: 'mapsCtrl'
     });
 
   $routeProvider.otherwise({redirectTo: '/routes/'});

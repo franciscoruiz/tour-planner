@@ -1,0 +1,30 @@
+<div>
+  <h2>
+    Maps ({{ maps.length }})
+    <button
+      ng-click="reloadMaps()"
+      class="fa fa-lg fa-fw fa-refresh"
+      ></button>
+    <a href="#/new-map/" class="btn fa fa-lg fa-fw fa-plus"></a>
+  </h2>
+  <ul>
+    <li
+      ng-repeat="map in maps | orderBy:'title'"
+      ng-controller="MapCtrl as mapCtrl"
+      >
+      <button
+        class="fa fa-lg fa-fw fa-map-marker"
+        ng-click="mapCtrl.showMap()"
+        ng-show="!mapCtrl.isMapVisible()"
+        ></button>
+      <button
+        class="fa fa-lg fa-fw fa-map-marker btn-on"
+        ng-click="mapCtrl.hideMap()"
+        ng-show="mapCtrl.isMapVisible()"
+        ></button>
+      <a href="#/maps/{{ map|getResourceID }}">
+        {{ map.title }}
+      </a>
+    </li>
+  </ul>
+</div>
