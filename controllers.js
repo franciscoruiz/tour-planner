@@ -88,7 +88,7 @@ controllers.controller('RouteCtrl', function ($scope, $log, $location, mapServic
 controllers.controller('RouteEditCtrl', function ($scope, $location, $filter) {
   this.saveRoute = function () {
     $scope.route.$save(function (route) {
-      var routeId = $filter('getRouteId')(route);
+      var routeId = $filter('getResourceID')(route);
       $location.path('/routes/' + routeId);
     });
   };
@@ -139,7 +139,7 @@ controllers.controller('NewRouteCtrl', function ($scope, $location, $filter, map
     route.updateFromDirectionsResult(directionsRenderer.getDirections());
     route.name = "From " + route.origin + " to " + route.destination;
     route.$save(function (route) {
-      var routeId = $filter('getRouteId')(route);
+      var routeId = $filter('getResourceID')(route);
       $location.path('/routes/' + routeId);
     });
 
@@ -161,4 +161,43 @@ controllers.controller('NewRouteCtrl', function ($scope, $location, $filter, map
 
 
   this.reset();
+});
+
+
+controllers.controller('NewMapCtrl', function ($scope, $location, $filter, mapService, Map) {
+  $scope.title = null;
+  $scope.rectangles = [];
+
+  var drawingManager = mapService.startDrawing();
+
+  google.maps.event.addListener(drawingManager, 'rectanglecomplete', function (rectangle) {
+    $scope.$apply(function () {
+      $scope.rectangles.push(rectangle);
+      drawingManager.setOptions({drawingMode: null});
+    });
+  });
+
+  this.saveMap = function () {
+    var self = this;
+    Map.create($scope.title, $scope.rectangles)
+      .then(function (map) {
+        var mapId = $filter('getResourceID')(map);
+        self.reset();
+        $location.path('/maps/' + mapId);
+      });
+  };
+
+  this.reset = function () {
+    drawingManager.setMap(null);
+    angular.forEach($scope.rectangles, function (rectangle) {
+      rectangle.setMap(null);
+    });
+  };
+
+  this.deleteRectangle = function (rectangle) {
+    rectangle.setMap(null);
+
+    var index = $scope.rectangles.indexOf(rectangle);
+    $scope.rectangles.splice(index, 1);
+  };
 });

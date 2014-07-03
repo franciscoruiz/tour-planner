@@ -1,0 +1,20 @@
+<div>
+  <h2>
+    <a href="#/" class="btn fa fa-lg fa-fw fa-long-arrow-left"></a>
+    Add
+  </h2>
+  <form name="form">
+    <input name="title" ng-model="title" required>
+    <button ng-click="newMapCtrl.reset()">Reset</button>
+    <button ng-click="newMapCtrl.saveMap()" ng-disabled="form.$invalid">Save</button>
+  </form>
+  <ul>
+    <li ng-repeat="rectangle in rectangles">
+      {{ rectangle.getBounds().toString() }}
+      <button
+        class="fa fa-lg fa-fw fa-trash-o"
+        ng-click="newMapCtrl.deleteRectangle(rectangle)"
+        ></button>
+    </li>
+  </ul>
+</div>

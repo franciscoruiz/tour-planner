@@ -35,7 +35,7 @@ mapServices.factory('directionsService', function ($q, $log) {
   return {route: retrieveDirections};
 });
 
-mapServices.factory('mapService', function ($rootScope, directionsService) {
+mapServices.factory('mapService', function ($rootScope, $log, directionsService) {
 
   var MapService = function (element, options) {
     this.map = new google.maps.Map(element, options);
@@ -90,6 +90,34 @@ mapServices.factory('mapService', function ($rootScope, directionsService) {
   MapService.prototype.isRouteOnMap = function (route) {
     var routeRenderer = this.getRouteRenderer(route);
     return !!(routeRenderer && routeRenderer.getMap());
+  };
+
+  // Drawing
+
+  MapService.prototype.startDrawing = function () {
+    // https://developers.google.com/maps/documentation/javascript/drawinglayer
+    var drawingManager = new google.maps.drawing.DrawingManager({
+      drawingControl: true,
+      drawingControlOptions: {
+        position: google.maps.ControlPosition.TOP_CENTER,
+        drawingModes: [
+          google.maps.drawing.OverlayType.RECTANGLE
+        ]
+      }
+    });
+
+    google.maps.event.addListener(drawingManager, 'rectanglecomplete', function (rectangle) {
+      $log.debug('Created rectangle: %s', rectangle.getBounds().toString());
+      rectangle.setEditable(true);
+      rectangle.setDraggable(true);
+      google.maps.event.addListener(rectangle, 'bounds_changed', function () {
+        $log.debug('Updated rectangle: %s', rectangle.getBounds().toString());
+      });
+    });
+
+    drawingManager.setMap(this.map);
+
+    return drawingManager;
   };
 
   // Generic

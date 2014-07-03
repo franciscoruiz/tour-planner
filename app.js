@@ -22,6 +22,14 @@ angular.module('planner', [
     .when('/routes/:route/edit/', {
       templateUrl: 'templates/route-editing.html',
       controller: 'RouteViewCtrl'
-    })
-    .otherwise({redirectTo: '/routes/'});
+    });
+
+  $routeProvider
+    .when('/new-map/', {
+      templateUrl: 'templates/map-creation.html',
+      controller: 'NewMapCtrl',
+      controllerAs: 'newMapCtrl'
+    });
+
+  $routeProvider.otherwise({redirectTo: '/routes/'});
 });

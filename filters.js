@@ -1,6 +1,9 @@
 
 var filters = angular.module('planner.filters', []);
 
+// Routes
+
+
 filters.filter('displayDistance', function () {
   return function (meters) {
     var distanceText;
@@ -53,16 +56,19 @@ filters.filter('htmlToText', function () {
 });
 
 
-filters.filter('getRouteId', function () {
-  return function (route) {
-    return route._id.$oid;
-  };
-});
-
-
 filters.filter('getRouteSteps', function () {
   return function (route) {
     var steps = route.legs.reduce(function (a, b) { return a.concat(b.steps); }, []);
     return steps;
+  };
+});
+
+
+// Generic
+
+
+filters.filter('getResourceID', function () {
+  return function (resource) {
+    return resource._id.$oid;
   };
 });

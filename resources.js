@@ -66,31 +66,67 @@ resources.factory('Route', function ($resource) {
     return Route.remove({id: this._id.$oid}, callback);
   };
 
-  var convertBoundsToJSON = function (bounds) {
-    return {
-      northEast: convertLatLngToJSON(bounds.getNorthEast()),
-      southWest: convertLatLngToJSON(bounds.getSouthWest())
-    };
-  };
-
-  var convertLatLngToJSON = function (latLng) {
-    var jsonValue;
-    if (latLng instanceof google.maps.LatLng) {
-      jsonValue = {lat: latLng.lat(), lng: latLng.lng()};
-    } else {
-      jsonValue = latLng;
-    }
-    return jsonValue;
-  };
-
-  var filterObjectKeys = function (obj, keys) {
-    angular.forEach(obj, function (value, key) {
-      if (keys.indexOf(key) === -1) {
-        delete obj[key];
-      }
-    });
-    return obj;
-  };
-
   return Route;
 });
+
+
+resources.factory('Map', function ($resource) {
+  var Map = $resource(
+    'https://api.mongolab.com/api/1/databases/tour-planner/collections/maps/:id',
+    { apiKey: SETTINGS.MONGOLAB_API_KEY },
+    { update: { method: 'PUT' } }
+  );
+
+  Map.create = function (title, rectangles) {
+    var bounds = [];
+    angular.forEach(rectangles, function (rectangle) {
+      bounds.push(convertBoundsToJSON(rectangle.getBounds()));
+    });
+    var map = new Map({title: title, bounds: bounds});
+    return map.$save();
+  };
+
+  Map.prototype.update = function (callback) {
+    return Map.update(
+      {id: this._id.$oid},
+      angular.extend({}, this, {_id: undefined}),
+      callback
+    );
+  };
+
+  Map.prototype.destroy = function (callback) {
+    return Map.remove({id: this._id.$oid}, callback);
+  };
+
+  return Map;
+});
+
+
+/*
+ * Utilities
+ */
+var convertBoundsToJSON = function (bounds) {
+  return {
+    northEast: convertLatLngToJSON(bounds.getNorthEast()),
+    southWest: convertLatLngToJSON(bounds.getSouthWest())
+  };
+};
+
+var convertLatLngToJSON = function (latLng) {
+  var jsonValue;
+  if (latLng instanceof google.maps.LatLng) {
+    jsonValue = {lat: latLng.lat(), lng: latLng.lng()};
+  } else {
+    jsonValue = latLng;
+  }
+  return jsonValue;
+};
+
+var filterObjectKeys = function (obj, keys) {
+  angular.forEach(obj, function (value, key) {
+    if (keys.indexOf(key) === -1) {
+      delete obj[key];
+    }
+  });
+  return obj;
+};
