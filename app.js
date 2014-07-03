@@ -21,8 +21,7 @@ angular.module('planner', [
     })
     .when('/routes/:route/edit/', {
       templateUrl: 'templates/route-editing.html',
-      controller: 'RouteEditCtrl',
-      controllerAs: 'routeEditCtrl'
+      controller: 'RouteViewCtrl'
     })
     .otherwise({redirectTo: '/routes/'});
 });

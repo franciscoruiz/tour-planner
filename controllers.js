@@ -85,22 +85,12 @@ controllers.controller('RouteCtrl', function ($scope, $log, $location, mapServic
 });
 
 
-controllers.controller('RouteEditCtrl', function ($scope, $log, $route, mapService, Route) {
-  var currentRouteId = $route.current.params.route;
-
-  $scope.route = Route.$get({_id: {$oid: currentRouteId}})
-
-  this.editRoute = function () {
-    $scope.isEditingMode = true;
-    $scope.edited = angular.copy($scope.route);
-  };
+controllers.controller('RouteEditCtrl', function ($scope, $location, $filter) {
   this.saveRoute = function () {
-    $scope.isEditingMode = false;
-    angular.extend($scope.route, $scope.edited);
-    $scope.route.update();
-  };
-  this.cancelEditing = function () {
-    $scope.isEditingMode = false;
+    $scope.route.$save(function (route) {
+      var routeId = $filter('getRouteId')(route);
+      $location.path('/routes/' + routeId);
+    });
   };
 });
 

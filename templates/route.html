@@ -20,10 +20,10 @@
       class="fa fa-lg fa-fw fa-print"
       ng-click="routeCtrl.logRouteDetails()"
       ></button>
-    <button
+    <a
       class="fa fa-lg fa-fw fa-pencil"
-      ng-click="routeCtrl.editRoute()"
-      ></button>
+      href="#/routes/{{ route|getRouteId }}/edit/"
+      ></a>
     <button
       class="fa fa-lg fa-fw fa-trash-o"
       ng-click="routeCtrl.deleteRoute()"

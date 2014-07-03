@@ -1,13 +1,12 @@
-<div>
+<div ng-controller="RouteEditCtrl as routeEditCtrl" ng-if="route">
   <form name="routeForm">
-    <input name="name" ng-model="edited.name" required placeholder="Name">
-    <textarea name="description" ng-model="edited.description" placeholder="Description"></textarea>
+    <input name="name" ng-model="route.name" required placeholder="Name">
+    <input type="url" name="url" ng-model="route.url" placeholder="URL">
+    <textarea name="description" ng-model="route.description" placeholder="Description"></textarea>
     <button
-      ng-click="routeCtrl.saveRoute()"
+      ng-click="routeEditCtrl.saveRoute()"
       ng-disabled="routeForm.$invalid"
       >Save</button>
-    <button
-      ng-click="routeCtrl.cancelEditing()"
-      >Cancel</button>
+    <a href="#/routes/{{ route|getRouteId }}/">Cancel</a>
   </form>
 </div>
