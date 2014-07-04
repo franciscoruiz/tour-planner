@@ -168,14 +168,7 @@ controllers.controller('NewMapCtrl', function ($scope, $location, $filter, mapSe
   $scope.title = null;
   $scope.rectangles = [];
 
-  var drawingManager = mapService.startDrawing();
-
-  google.maps.event.addListener(drawingManager, 'rectanglecomplete', function (rectangle) {
-    $scope.$apply(function () {
-      $scope.rectangles.push(rectangle);
-      drawingManager.setOptions({drawingMode: null});
-    });
-  });
+  mapService.startDrawing();
 
   this.saveMap = function () {
     var self = this;
@@ -188,7 +181,7 @@ controllers.controller('NewMapCtrl', function ($scope, $location, $filter, mapSe
   };
 
   this.reset = function () {
-    drawingManager.setMap(null);
+    mapService.stopDrawing();
     angular.forEach($scope.rectangles, function (rectangle) {
       rectangle.setMap(null);
     });
@@ -200,4 +193,32 @@ controllers.controller('NewMapCtrl', function ($scope, $location, $filter, mapSe
     var index = $scope.rectangles.indexOf(rectangle);
     $scope.rectangles.splice(index, 1);
   };
+});
+
+
+controllers.controller('MapsCtrl', function ($scope, Map, mapService) {
+  $scope.maps = Map.query();
+});
+
+
+controllers.controller('MapCtrl', function ($scope, mapService) {
+  var rectangles = $scope.map.getBoundsAsRectangles();
+
+  this.showMap = function () {
+    angular.forEach(rectangles, function (rectangle) {
+      rectangle.setMap(mapService.map);
+    });
+  };
+
+  this.hideMap = function () {
+    angular.forEach(rectangles, function (rectangle) {
+      rectangle.setMap(null);
+    });
+  };
+
+  this.isMapVisible = function () {
+    var isVisible = rectangles.length && rectangles[0].getMap();
+    return !!isVisible;
+  };
+
 });

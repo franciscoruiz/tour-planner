@@ -40,6 +40,8 @@ mapServices.factory('mapService', function ($rootScope, $log, directionsService)
   var MapService = function (element, options) {
     this.map = new google.maps.Map(element, options);
 
+    this.drawingManager = initDrawingManager();
+
     this.routeRenderers = {};
   };
 
@@ -94,7 +96,7 @@ mapServices.factory('mapService', function ($rootScope, $log, directionsService)
 
   // Drawing
 
-  MapService.prototype.startDrawing = function () {
+  var initDrawingManager = function () {
     // https://developers.google.com/maps/documentation/javascript/drawinglayer
     var drawingManager = new google.maps.drawing.DrawingManager({
       drawingControl: true,
@@ -115,9 +117,15 @@ mapServices.factory('mapService', function ($rootScope, $log, directionsService)
       });
     });
 
-    drawingManager.setMap(this.map);
-
     return drawingManager;
+  };
+
+  MapService.prototype.startDrawing = function () {
+    this.drawingManager.setMap(this.map);
+  };
+
+  MapService.prototype.stopDrawing = function () {
+    this.drawingManager.setMap(null);
   };
 
   // Generic

@@ -98,6 +98,17 @@ resources.factory('Map', function ($resource) {
     return Map.remove({id: this._id.$oid}, callback);
   };
 
+  Map.prototype.getBoundsAsRectangles = function () {
+    var rectangles = [];
+    angular.forEach(this.bounds, function (bound) {
+      var rectangle = new google.maps.Rectangle({
+        bounds: convertJSONToBounds(bound)
+      });
+      rectangles.push(rectangle);
+    });
+    return rectangles;
+  };
+
   return Map;
 });
 
@@ -112,6 +123,14 @@ var convertBoundsToJSON = function (bounds) {
   };
 };
 
+var convertJSONToBounds = function (boundsJSON) {
+  var bounds = new google.maps.LatLngBounds(
+    convertJSONToLatLng(boundsJSON.southWest),
+    convertJSONToLatLng(boundsJSON.northEast)
+  );
+  return bounds;
+};
+
 var convertLatLngToJSON = function (latLng) {
   var jsonValue;
   if (latLng instanceof google.maps.LatLng) {
@@ -120,6 +139,11 @@ var convertLatLngToJSON = function (latLng) {
     jsonValue = latLng;
   }
   return jsonValue;
+};
+
+var convertJSONToLatLng = function (latLngJSON) {
+  var latLng = new google.maps.LatLng(latLngJSON.lat, latLngJSON.lng);
+  return latLng;
 };
 
 var filterObjectKeys = function (obj, keys) {
