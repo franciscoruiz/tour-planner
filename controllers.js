@@ -130,8 +130,8 @@ controllers.controller('NewRouteCtrl', function ($scope, $location, $filter, map
     mapService.renderDirections($scope.origin, destination, waypoints, directionsRenderer);
   };
 
-  this.addPoint = function () {
-    $scope.points.push(new Point());
+  this.addPoint = function (location) {
+    $scope.points.push(new Point(location));
   };
 
   this.saveRoute = function () {
@@ -160,7 +160,13 @@ controllers.controller('NewRouteCtrl', function ($scope, $location, $filter, map
   });
 
 
+  // Initialization
   this.reset();
+  var self = this;
+  $scope.origin = $location.search().from;
+  angular.forEach($location.search().to, function (location) {
+    self.addPoint(location);
+  });
 });
 
 
