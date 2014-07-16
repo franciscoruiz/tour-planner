@@ -116,18 +116,9 @@ controllers.controller('NewRouteCtrl', function ($scope, $location, $filter, map
   };
 
   this.showRoute = function () {
-    var destination = $scope.points[$scope.points.length - 1].location;
-    var intermediatePoints = $scope.points.slice(0, -1);
-    var waypoints = [];
-    angular.forEach(intermediatePoints, function (point) {
-      if (!point.location) {
-        return;
-      }
-      waypoints.push({location: point.location, stopover: false});
-    });
-
+    var route = buildRouteFromForm();
     resetDirectionsRenderer();
-    mapService.renderDirections($scope.origin, destination, waypoints, directionsRenderer);
+    mapService.renderRoute(route, directionsRenderer);
   };
 
   this.addPoint = function (location) {
@@ -135,7 +126,7 @@ controllers.controller('NewRouteCtrl', function ($scope, $location, $filter, map
   };
 
   this.saveRoute = function () {
-    var route = new Route();
+    var route = buildRouteFromForm();
     route.updateFromDirectionsResult(directionsRenderer.getDirections());
     route.name = "From " + route.origin + " to " + route.destination;
     route.$save(function (route) {
@@ -146,9 +137,33 @@ controllers.controller('NewRouteCtrl', function ($scope, $location, $filter, map
     this.reset();
   };
 
+  var buildRouteFromForm = function () {
+    var locations = [];
+    angular.forEach($scope.points, function (point) {
+      if (!point.location) {
+        return;
+      }
+      locations.push(point.location);
+    });
+    var destination = locations.pop();
+    var waypoints = [];
+    angular.forEach(locations, function (location) {
+      waypoints.push({location: location, stopover: false});
+    });
+    var route = new Route({
+      origin: $scope.origin,
+      destination: destination,
+      waypoints: waypoints
+    });
+    return route;
+  };
+
   var Point = function (location) {
     this.location = location;
   };
+
+
+  // Interactions with the map
 
   mapService.addEventListener('rightclick', function (event) {
     var location = event.latLng;
@@ -161,6 +176,7 @@ controllers.controller('NewRouteCtrl', function ($scope, $location, $filter, map
 
 
   // Initialization
+
   this.reset();
   var self = this;
   $scope.origin = $location.search().from;
