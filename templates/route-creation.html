@@ -4,11 +4,11 @@
     Add
   </h2>
   <form name="routeForm">
-    <input name="origin" ng-model="origin" required>
     <input ng-repeat="point in points" ng-model="point.location">
+
     <button ng-click="newRouteCtrl.addPoint()">Add waypoint</button>
-    <button ng-click="newRouteCtrl.showRoute()" ng-disabled="routeForm.$invalid">Calculate</button>
+    <button ng-click="newRouteCtrl.show()" ng-disabled="routeForm.$invalid">Calculate</button>
     <button ng-click="newRouteCtrl.reset()">Reset</button>
-    <button ng-click="newRouteCtrl.saveRoute()" ng-disabled="routeForm.$invalid">Save</button>
+    <button ng-click="newRouteCtrl.save()" ng-disabled="routeForm.$invalid">Save</button>
   </form>
 </div>

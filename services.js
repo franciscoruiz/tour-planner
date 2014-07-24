@@ -1,6 +1,30 @@
 
 var mapServices = angular.module('map.services', []);
 
+
+mapServices.factory('geocoderService', function ($q, $log) {
+  var geocoder = new google.maps.Geocoder();
+
+  var geocode = function (address) {
+    var deferred = $q.defer();
+
+    var request = {address: address};
+    geocoder.geocode(request, function (results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        deferred.resolve(results);
+      } else {
+        deferred.reject(results, status);
+        $log.log(status, request);
+      }
+    });
+
+    return deferred.promise;
+  };
+
+  return {geocode: geocode};
+});
+
+
 mapServices.factory('directionsService', function ($q, $log) {
   var directionsService = new google.maps.DirectionsService();
 
@@ -35,7 +59,8 @@ mapServices.factory('directionsService', function ($q, $log) {
   return {route: retrieveDirections};
 });
 
-mapServices.factory('mapService', function ($rootScope, $log, directionsService) {
+
+mapServices.factory('mapService', function ($rootScope, $log, geocoderService, directionsService) {
 
   var MapService = function (element, options) {
     this.map = new google.maps.Map(element, options);
@@ -43,6 +68,18 @@ mapServices.factory('mapService', function ($rootScope, $log, directionsService)
     this.drawingManager = initDrawingManager();
 
     this.routeRenderers = {};
+  };
+
+  // Markers
+
+  MapService.prototype.addMarker = function (location, options) {
+    var self = this;
+    geocoderService.geocode(location).then(function (results, status) {
+      var location = results[0].geometry.location;
+      var markerForcedOptions = {position: location, map: self.map};
+      var markerOptions = angular.extend({}, options || {}, markerForcedOptions);
+      var marker = new google.maps.Marker(markerOptions);
+    });
   };
 
   // Directions
