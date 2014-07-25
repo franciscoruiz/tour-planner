@@ -126,7 +126,7 @@ controllers.controller('NewRouteCtrl', function ($scope, $location, $filter, map
 
   var showPoint = function (location) {
     var markerOptions = {};
-    var marker = mapService.addMarker(location, markerOptions);
+    mapService.searchForAddress(location, markerOptions);
   };
 
   var showRoute = function (locations) {

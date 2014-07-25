@@ -70,16 +70,24 @@ mapServices.factory('mapService', function ($rootScope, $log, geocoderService, d
     this.routeRenderers = {};
   };
 
-  // Markers
+  // Points
+
+  MapService.prototype.searchForAddress = function (address, markerOptions) {
+    var self = this;
+    geocoderService.geocode(address).then(function (results) {
+      angular.forEach(results, function (result) {
+        var location = result.geometry.location;
+        var markerForcedOptions = {position: location, map: self.map};
+        markerOptions = angular.extend({}, markerOptions || {}, markerForcedOptions);
+        var marker = new google.maps.Marker(markerOptions);
+      });
+    });
+  };
 
   MapService.prototype.addMarker = function (location, options) {
-    var self = this;
-    geocoderService.geocode(location).then(function (results, status) {
-      var location = results[0].geometry.location;
-      var markerForcedOptions = {position: location, map: self.map};
-      var markerOptions = angular.extend({}, options || {}, markerForcedOptions);
-      var marker = new google.maps.Marker(markerOptions);
-    });
+    var markerForcedOptions = {position: location, map: this.map, draggagle: true};
+    var markerOptions = angular.extend({}, options || {}, markerForcedOptions);
+    var marker = new google.maps.Marker(markerOptions);
   };
 
   // Directions
