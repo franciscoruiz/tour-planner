@@ -5,10 +5,10 @@ var mapServices = angular.module('map.services', []);
 mapServices.factory('geocoderService', function ($q, $log) {
   var geocoder = new google.maps.Geocoder();
 
-  var geocode = function (address) {
+  var geocode = function (address, bounds) {
     var deferred = $q.defer();
 
-    var request = {address: address};
+    var request = {address: address, bounds: bounds};
     geocoder.geocode(request, function (results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
         deferred.resolve(results);
@@ -72,12 +72,24 @@ mapServices.factory('mapService', function ($rootScope, $log, geocoderService, d
 
   // Points
 
+  var MARKER_ICON_OUTSIDE_VIEWPORT = {
+    path: google.maps.SymbolPath.CIRCLE,
+    scale: 5,
+    strokeWeight: 1,
+    fillColor: 'red',
+    fillOpacity: 1
+  };
+
   MapService.prototype.searchForAddress = function (address, markerOptions) {
     var self = this;
-    geocoderService.geocode(address).then(function (results) {
+    var viewportBounds = this.map.getBounds();
+    geocoderService.geocode(address, viewportBounds).then(function (results) {
       angular.forEach(results, function (result) {
         var location = result.geometry.location;
         var markerForcedOptions = {position: location, map: self.map};
+        if (!viewportBounds.contains(location)) {
+          markerForcedOptions.icon = MARKER_ICON_OUTSIDE_VIEWPORT;
+        }
         markerOptions = angular.extend({}, markerOptions || {}, markerForcedOptions);
         var marker = new google.maps.Marker(markerOptions);
       });
