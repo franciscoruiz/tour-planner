@@ -6,9 +6,20 @@
   <form name="routeForm">
     <input ng-repeat="point in points" ng-model="point.location">
 
-    <button ng-click="newRouteCtrl.addPoint()">Add waypoint</button>
-    <button ng-click="newRouteCtrl.show()" ng-disabled="routeForm.$invalid">Calculate</button>
-    <button ng-click="newRouteCtrl.reset()">Reset</button>
-    <button ng-click="newRouteCtrl.save()" ng-disabled="routeForm.$invalid">Save</button>
+    <button ng-click="newRouteCtrl.addPoint()" type="button">
+      Add waypoint
+    </button>
+    <button
+      ng-click="newRouteCtrl.search()"
+      type="button"
+      ng-disabled="routeForm.$invalid">
+      Search
+    </button>
+    <button ng-click="newRouteCtrl.reset()" type="button">
+      Reset
+    </button>
+    <button ng-click="newRouteCtrl.save()" ng-disabled="routeForm.$invalid">
+      Save
+    </button>
   </form>
 </div>

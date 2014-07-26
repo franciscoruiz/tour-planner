@@ -115,21 +115,21 @@ controllers.controller('NewRouteCtrl', function ($scope, $location, $filter, map
     directionsRenderer = new google.maps.DirectionsRenderer({draggable: true});
   };
 
-  this.show = function () {
+  this.search = function () {
     var locations = getLocationsFromForm();
     if (locations.length === 1) {
-      showPoint(locations[0]);
+      searchForAddress(locations[0]);
     } else {
-      showRoute(locations);
+      searchForDirections(locations);
     }
   };
 
-  var showPoint = function (location) {
+  var searchForAddress = function (location) {
     var markerOptions = {};
     mapService.searchForAddress(location, markerOptions);
   };
 
-  var showRoute = function (locations) {
+  var searchForDirections = function (locations) {
     resetDirectionsRenderer();
 
     var route = buildRouteFromLocations(locations);
