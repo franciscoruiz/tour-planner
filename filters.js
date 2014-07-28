@@ -69,6 +69,7 @@ filters.filter('getRouteSteps', function () {
 
 filters.filter('getResourceID', function () {
   return function (resource) {
-    return resource._id.$oid;
+    var id = !!resource._id ? resource._id.$oid : null;
+    return id;
   };
 });

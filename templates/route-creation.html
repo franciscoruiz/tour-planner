@@ -18,8 +18,27 @@
     <button ng-click="newRouteCtrl.reset()" type="button">
       Reset
     </button>
-    <button ng-click="newRouteCtrl.save()" ng-disabled="routeForm.$invalid">
-      Save
-    </button>
   </form>
 </div>
+
+
+<script type="text/ng-template" id="infoWindow.html">
+  <div ng-controller="PointCtrl as pointCtrl">
+    <h3>{{ point.formatted_address }}</h3>
+    <div>{{ point.location }}</div>
+    <form>
+      <button
+        ng-click="pointCtrl.savePoint()"
+        ng-hide="point|getResourceID"
+        >
+        Save
+      </button>
+      <button
+        ng-click="pointCtrl.deletePoint()"
+        ng-show="point|getResourceID"
+        >
+        Delete
+      </button>
+    </form>
+  </div>
+</script>
