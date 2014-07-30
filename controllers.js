@@ -125,8 +125,18 @@ controllers.controller('NewRouteCtrl', function ($scope, $location, $filter, map
   };
 
   var searchForAddress = function (location) {
-    var markerOptions = {};
-    mapService.searchForAddress(location, markerOptions);
+    var infoWindowOptions = {
+      templateId: 'infoWindow.html',
+      templateContext: function (result) {
+        var point = new Point({
+          location: result.geometry.location,
+          address_components: result.address_components,
+          formatted_address: result.formatted_address
+        });
+        return {point: point};
+      }
+    };
+    mapService.searchForAddress(location, {}, infoWindowOptions);
   };
 
   var searchForDirections = function (locations) {
@@ -142,15 +152,7 @@ controllers.controller('NewRouteCtrl', function ($scope, $location, $filter, map
 
   this.save = function () {
     var locations = getLocationsFromForm();
-    if (locations.length === 1) {
-      savePoint(locations[0]);
-    } else {
-      saveRoute(locations);
-    }
-  };
-
-  var savePoint = function (location) {
-    Point.create(location);
+    saveRoute(locations);
   };
 
   var saveRoute = function (locations) {
@@ -199,7 +201,7 @@ controllers.controller('NewRouteCtrl', function ($scope, $location, $filter, map
 
   // Interactions with the map
 
-  mapService.addEventListener('rightclick', function (event) {
+  mapService.addMapEventListener('rightclick', function (event) {
     var location = event.latLng;
     $scope.points.push(new Location(location));
   });
@@ -216,6 +218,17 @@ controllers.controller('NewRouteCtrl', function ($scope, $location, $filter, map
       self.addPoint(location);
     });
   }
+});
+
+
+controllers.controller('PointCtrl', function ($scope, Point) {
+  this.savePoint = function () {
+    $scope.point.$save();
+  };
+
+  this.deletePoint = function () {
+    $scope.point.destroy();
+  };
 });
 
 

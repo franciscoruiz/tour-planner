@@ -5,10 +5,10 @@ var mapServices = angular.module('map.services', []);
 mapServices.factory('geocoderService', function ($q, $log) {
   var geocoder = new google.maps.Geocoder();
 
-  var geocode = function (address, bounds) {
+  var geocode = function (address) {
     var deferred = $q.defer();
 
-    var request = {address: address, bounds: bounds};
+    var request = {address: address};
     geocoder.geocode(request, function (results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
         deferred.resolve(results);
@@ -60,7 +60,7 @@ mapServices.factory('directionsService', function ($q, $log) {
 });
 
 
-mapServices.factory('mapService', function ($rootScope, $log, geocoderService, directionsService) {
+mapServices.factory('mapService', function ($rootScope, $log, $q, $templateCache, $compile, geocoderService, directionsService) {
 
   var MapService = function (element, options) {
     this.map = new google.maps.Map(element, options);
@@ -80,20 +80,57 @@ mapServices.factory('mapService', function ($rootScope, $log, geocoderService, d
     fillOpacity: 1
   };
 
-  MapService.prototype.searchForAddress = function (address, markerOptions) {
+  MapService.prototype.searchForAddress = function (address, markerOptions, infoWindowOptions) {
+    var deferred = $q.defer();
+
     var self = this;
     var viewportBounds = this.map.getBounds();
-    geocoderService.geocode(address, viewportBounds).then(function (results) {
-      angular.forEach(results, function (result) {
-        var location = result.geometry.location;
+    geocoderService.geocode(address).then(function (geocoderResults) {
+      var searchResults = [];
+      angular.forEach(geocoderResults, function (geocoderResult) {
+        var location = geocoderResult.geometry.location;
         var markerForcedOptions = {position: location, map: self.map};
         if (!viewportBounds.contains(location)) {
           markerForcedOptions.icon = MARKER_ICON_OUTSIDE_VIEWPORT;
         }
         markerOptions = angular.extend({}, markerOptions || {}, markerForcedOptions);
         var marker = new google.maps.Marker(markerOptions);
+
+        searchResults.push({geocoderResult: geocoderResult, marker: marker});
+      });
+      deferred.resolve(searchResults);
+    });
+
+    var promise = deferred.promise;
+
+    // Attach default behaviour: on click present InfoWindow
+    var infoWindowTemplate = $compile($templateCache.get(infoWindowOptions.templateId));
+    promise.then(function (searchResults) {
+      angular.forEach(searchResults, function (searchResult) {
+        var scope = $rootScope.$new(true);
+
+        var geocoderResult = searchResult.geocoderResult;
+        angular.extend(scope, infoWindowOptions.templateContext(geocoderResult));
+
+        var compiledTemplate = infoWindowTemplate(scope);
+        var infoWindowContentElement;
+        if (compiledTemplate.length === 1) {
+          infoWindowContentElement = compiledTemplate[0];
+        } else {
+          $log.error('Template must contain a single element (tip: add top-level <div>)');
+        }
+        var infoWindow = new google.maps.InfoWindow({
+          content: compiledTemplate[0]
+        });
+
+        var marker = searchResult.marker;
+        self.addEventListener(marker, 'click', function () {
+          self.openInfoWindow(infoWindow, marker);
+        });
       });
     });
+
+    return promise;
   };
 
   MapService.prototype.addMarker = function (location, options) {
@@ -151,6 +188,13 @@ mapServices.factory('mapService', function ($rootScope, $log, geocoderService, d
     return !!(routeRenderer && routeRenderer.getMap());
   };
 
+  // InfoWindows
+
+  MapService.prototype.openInfoWindow = function (infoWindow, anchor) {
+    infoWindow.open(this.map, anchor);
+    return infoWindow;
+  };
+
   // Drawing
 
   var initDrawingManager = function () {
@@ -187,13 +231,17 @@ mapServices.factory('mapService', function ($rootScope, $log, geocoderService, d
 
   // Generic
 
-  MapService.prototype.addEventListener = function (eventName, handler) {
-    return google.maps.event.addListener(this.map, eventName, function () {
+  MapService.prototype.addEventListener = function (target, eventName, handler) {
+    return google.maps.event.addListener(target, eventName, function () {
       var handlerArguments = arguments;
       $rootScope.$apply(function () {
         handler.apply({}, handlerArguments);
       });
     });
+  };
+
+  MapService.prototype.addMapEventListener = function (eventName, handler) {
+    return this.addEventListener(this.map, eventName, handler);
   };
 
   MapService.prototype.removeEventListener = function (listener) {
