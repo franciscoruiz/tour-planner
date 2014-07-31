@@ -97,16 +97,16 @@ controllers.controller('RouteEditCtrl', function ($scope, $location, $filter) {
 });
 
 
-controllers.controller('NewRouteCtrl', function ($scope, $location, $filter, mapService, Route) {
-  $scope.origin;
+controllers.controller('NewRouteCtrl', function ($scope, $location, $filter, mapService, Point, Route) {
   $scope.points;
 
   var directionsRenderer;
 
   this.reset = function () {
     resetDirectionsRenderer();
-    $scope.origin = null;
+
     $scope.points = [];
+    this.addPoint();
   };
 
   var resetDirectionsRenderer = function () {
@@ -117,18 +117,48 @@ controllers.controller('NewRouteCtrl', function ($scope, $location, $filter, map
     directionsRenderer = new google.maps.DirectionsRenderer({draggable: true});
   };
 
-  this.showRoute = function () {
-    var route = buildRouteFromForm();
+  this.search = function () {
+    var locations = getLocationsFromForm();
+    if (locations.length === 1) {
+      searchForAddress(locations[0]);
+    } else {
+      searchForDirections(locations);
+    }
+  };
+
+  var searchForAddress = function (location) {
+    var infoWindowOptions = {
+      templateId: 'infoWindow.html',
+      templateContext: function (result) {
+        var point = new Point({
+          location: result.geometry.location,
+          address_components: result.address_components,
+          formatted_address: result.formatted_address
+        });
+        return {point: point};
+      }
+    };
+    mapService.searchForAddress(location, {}, infoWindowOptions);
+  };
+
+  var searchForDirections = function (locations) {
     resetDirectionsRenderer();
+
+    var route = buildRouteFromLocations(locations);
     mapService.renderRoute(route, directionsRenderer);
   };
 
   this.addPoint = function (location) {
-    $scope.points.push(new Point(location));
+    $scope.points.push(new Location(location));
   };
 
-  this.saveRoute = function () {
-    var route = buildRouteFromForm();
+  this.save = function () {
+    var locations = getLocationsFromForm();
+    saveRoute(locations);
+  };
+
+  var saveRoute = function (locations) {
+    var route = buildRouteFromLocations(locations);
     route.updateFromDirectionsResult(directionsRenderer.getDirections());
     route.name = "From " + route.origin + " to " + route.destination;
     route.$save(function (route) {
@@ -139,7 +169,11 @@ controllers.controller('NewRouteCtrl', function ($scope, $location, $filter, map
     this.reset();
   };
 
-  var buildRouteFromForm = function () {
+  var Location = function (location) {
+    this.location = location;
+  };
+
+  var getLocationsFromForm = function () {
     var locations = [];
     angular.forEach($scope.points, function (point) {
       if (!point.location) {
@@ -147,44 +181,56 @@ controllers.controller('NewRouteCtrl', function ($scope, $location, $filter, map
       }
       locations.push(point.location);
     });
-    var destination = locations.pop();
+    return locations;
+  };
+
+  var buildRouteFromLocations = function (locations) {
+    var origin = locations[0];
+    var destination = locations[locations.length - 1];
     var waypoints = [];
-    angular.forEach(locations, function (location) {
+    angular.forEach(locations.slice(1, -1), function (location) {
       waypoints.push({location: location, stopover: false});
     });
+
     var route = new Route({
-      origin: $scope.origin,
+      origin: origin,
       destination: destination,
       waypoints: waypoints
     });
     return route;
   };
 
-  var Point = function (location) {
-    this.location = location;
-  };
-
 
   // Interactions with the map
 
-  mapService.addEventListener('rightclick', function (event) {
+  mapService.addMapEventListener('rightclick', function (event) {
     var location = event.latLng;
-    if (!$scope.origin) {
-      $scope.origin = location;
-    } else {
-      $scope.points.push(new Point(location));
-    }
+    $scope.points.push(new Location(location));
   });
 
 
   // Initialization
 
   this.reset();
-  var self = this;
-  $scope.origin = $location.search().from;
-  angular.forEach($location.search().to, function (location) {
-    self.addPoint(location);
-  });
+
+  if (angular.isDefined($location.search().from)) {
+    this.addPoint($location.search().from);
+    var self = this;
+    angular.forEach($location.search().to, function (location) {
+      self.addPoint(location);
+    });
+  }
+});
+
+
+controllers.controller('PointCtrl', function ($scope, Point) {
+  this.savePoint = function () {
+    $scope.point.$save();
+  };
+
+  this.deletePoint = function () {
+    $scope.point.destroy();
+  };
 });
 
 

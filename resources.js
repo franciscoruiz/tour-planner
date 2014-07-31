@@ -70,6 +70,30 @@ resources.factory('Route', function ($resource) {
 });
 
 
+resources.factory('Point', function ($resource) {
+  var Point = $resource(
+    'https://api.mongolab.com/api/1/databases/tour-planner/collections/points/:id',
+    { apiKey: SETTINGS.MONGOLAB_API_KEY },
+    { update: { method: 'PUT' } }
+  );
+
+  Point.create = function (location) {
+    var point = new Point({location: location});
+    return point.$save();
+  };
+
+  Point.prototype.update = function (callback) {
+    return Point.update(
+      {id: this._id.$oid},
+      angular.extend({}, this, {_id: undefined}),
+      callback
+    );
+  };
+
+  return Point;
+});
+
+
 resources.factory('Map', function ($resource) {
   var Map = $resource(
     'https://api.mongolab.com/api/1/databases/tour-planner/collections/maps/:id',
