@@ -2,12 +2,14 @@
 var controllers = angular.module('planner.controllers', []);
 
 
-controllers.controller('RoutesCtrl', function ($scope, mapService, Route) {
+controllers.controller('IndexCtrl', function ($scope, mapService, Route, KmlLayer) {
   $scope.routes = Route.query();
 
   $scope.reloadRoutes = function () {
     $scope.routes = Route.query();
   };
+
+  $scope.kmlLayers = KmlLayer.query();
 });
 
 
@@ -241,6 +243,23 @@ controllers.controller('MapCtrl', function ($scope, mapService) {
   this.isMapVisible = function () {
     var isVisible = rectangles.length && rectangles[0].getMap();
     return !!isVisible;
+  };
+
+});
+
+
+controllers.controller('KmlLayerCtrl', function ($scope, mapService) {
+
+  this.showKmlLayer = function () {
+    mapService.addKmlLayer($scope.layer);
+  };
+
+  this.hideKmlLayer = function () {
+    mapService.removeKmlLayer($scope.layer);
+  };
+
+  this.isKmlLayerOnMap = function () {
+    return mapService.isLayerOnMap($scope.layer);
   };
 
 });

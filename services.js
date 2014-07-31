@@ -43,6 +43,7 @@ mapServices.factory('mapService', function ($rootScope, $log, directionsService)
     this.drawingManager = initDrawingManager();
 
     this.routeRenderers = {};
+    this.kmlLayerRenderers = {};
   };
 
   // Directions
@@ -103,6 +104,41 @@ mapServices.factory('mapService', function ($rootScope, $log, directionsService)
   MapService.prototype.isRouteOnMap = function (route) {
     var routeRenderer = this.getRouteRenderer(route);
     return !!(routeRenderer && routeRenderer.getMap());
+  };
+
+  // KML layers
+
+  MapService.prototype.addKmlLayer = function (kmlLayer) {
+    if (this.isLayerOnMap(kmlLayer)) {
+      return;
+    }
+
+    var renderer = this.getLayerRenderer(kmlLayer);
+    renderer.setMap(this.map);
+  };
+
+  MapService.prototype.removeKmlLayer = function (kmlLayer) {
+    if (!this.isLayerOnMap(kmlLayer)) {
+      return;
+    }
+
+    var renderer = this.getLayerRenderer(kmlLayer);
+    renderer.setMap(null);
+  };
+
+  MapService.prototype.isLayerOnMap = function (kmlLayer) {
+    var renderer = this.getLayerRenderer(kmlLayer);
+    return !!(renderer && renderer.getMap());
+  };
+
+  MapService.prototype.getLayerRenderer = function (kmlLayer) {
+    var kmlLayerId = kmlLayer.url;
+    var renderer = this.kmlLayerRenderers[kmlLayerId];
+    if (angular.isUndefined(renderer)) {
+      renderer = new google.maps.KmlLayer({url: kmlLayer.url});
+      this.kmlLayerRenderers[kmlLayerId] = renderer;
+    }
+    return renderer;
   };
 
   // Drawing

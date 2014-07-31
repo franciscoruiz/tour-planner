@@ -113,6 +113,17 @@ resources.factory('Map', function ($resource) {
 });
 
 
+resources.factory('KmlLayer', function ($resource) {
+  var KmlLayer = $resource(
+    'https://api.mongolab.com/api/1/databases/tour-planner/collections/kml-layers/:id',
+    { apiKey: SETTINGS.MONGOLAB_API_KEY },
+    { update: { method: 'PUT' } }
+  );
+
+  return KmlLayer;
+});
+
+
 /*
  * Utilities
  */

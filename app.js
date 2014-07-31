@@ -6,9 +6,9 @@ angular.module('planner', [
   'map.services'
 ]).config(function ($routeProvider) {
   $routeProvider
-    .when('/routes/', {
-      templateUrl: 'templates/routes.html',
-      controller: 'RoutesCtrl'
+    .when('/', {
+      templateUrl: 'templates/index.html',
+      controller: 'IndexCtrl'
     })
     .when('/new-route/', {
       templateUrl: 'templates/route-creation.html',
@@ -36,5 +36,5 @@ angular.module('planner', [
       controllerAs: 'mapsCtrl'
     });
 
-  $routeProvider.otherwise({redirectTo: '/routes/'});
+  $routeProvider.otherwise({redirectTo: '/'});
 });
