@@ -151,7 +151,18 @@ mapServices.factory('mapService', function ($rootScope, $log, $q, $templateCache
   };
 
   MapService.prototype.renderRoute = function (route, renderer) {
-    return this.renderDirections(route.origin, route.destination, route.waypoints, renderer);
+    var waypoints = [];
+    angular.forEach(route.waypoints, function (w) {
+      var location = w.location;
+      if (angular.isObject(location) && ! (location instanceof google.maps.LatLng)) {
+        location = new google.maps.LatLng(location.lat, location.lng);
+      }
+      waypoints.push({
+        location: location,
+        stopover: w.stopover
+      });
+    });
+    return this.renderDirections(route.origin, route.destination, waypoints, renderer);
   };
 
   MapService.prototype.renderDirections = function (origin, destination, waypoints, renderer) {
