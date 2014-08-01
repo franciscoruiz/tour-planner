@@ -20,11 +20,13 @@ html, body, #map-canvas {
   max-width: 320px;
 }
 
-.overmap_panel div {
+.overmap_panel>div {
   padding: 1px 8px;
   border-width:2px;
   background-color: white;
   margin: 5px;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
 h2 {
@@ -44,7 +46,20 @@ ul, ol {
 
 li {
   line-height: 28px;
-  font-size: 1.1em;
+  overflow: hidden;
+  height: 24px;
+  line-height: 24px;
+}
+
+li:hover {
+  background-color: #f1f1f1;
+}
+
+li a,
+li a:hover,
+li a:visited {
+  text-decoration: none;
+  color: inherit;
 }
 
 ul li {
