@@ -12,21 +12,65 @@ html, body, #map-canvas {
   width: 100%;
 }
 
-.overmap_panel {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 99;
-  max-width: 320px;
+/* Mobile specific */
+@media only screen and (min-device-width : 320px) and (max-device-width: 481px) {
+  .overmap_panel {
+    position: absolute;
+    z-index: 99;
+    width: 90%;
+    height: 600px;
+    overflow-y: auto;
+  }
+
+  .overmap_panel>div {
+    background-color: white;
+  }
+
+  #menu-toggle {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    z-index: 99;
+    background-color: #f1f1f1;
+    line-height: 30px;
+    font-size: 1.5em;
+  }
+
+  li {
+    overflow: hidden;
+    height: 28px;
+    line-height: 28px;
+  }
 }
 
-.overmap_panel>div {
-  padding: 1px 8px;
-  border-width:2px;
-  background-color: white;
-  margin: 5px;
-  max-height: 400px;
-  overflow-y: auto;
+/* Non-mobile specific */
+@media (min-device-width: 481px) {
+  .overmap_panel {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 99;
+    max-width: 320px;
+  }
+
+  .overmap_panel>div {
+    padding: 1px 8px;
+    border-width:2px;
+    background-color: white;
+    margin: 5px;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  #menu-toggle {
+    display: none;
+  }
+
+  li {
+    overflow: hidden;
+    height: 24px;
+    line-height: 24px;
+  }
 }
 
 h2 {
@@ -42,13 +86,6 @@ form * {
 ul, ol {
   padding: 0;
   margin: 0;
-}
-
-li {
-  line-height: 28px;
-  overflow: hidden;
-  height: 24px;
-  line-height: 24px;
 }
 
 li:hover {

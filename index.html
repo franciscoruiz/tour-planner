@@ -20,7 +20,17 @@
     <script src="resources.js"></script>
   </head>
   <body>
-    <div class="overmap_panel" ng-view></div>
+    <div
+        id="menu-toggle"
+        class="fa fa-lg fa-fw fa-bars"
+        ng-init="showMenu = true"
+        ng-click="showMenu = !showMenu"
+    ></div>
+    <div
+        class="overmap_panel"
+        ng-show="showMenu"
+        ng-view
+    ></div>
     <div id="map-canvas"></div>
   </body>
 </html>
