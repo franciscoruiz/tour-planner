@@ -300,12 +300,19 @@ controllers.controller('MapCtrl', function ($scope, mapService) {
 
 controllers.controller('KmlLayerCtrl', function ($scope, mapService) {
 
+  var INFO_WINDOW_OPTIONS = {
+    templateId: 'kmlFeatureInfoWindow.html',
+    templateContext: function (kmlMouseEvent) {
+      return {event: kmlMouseEvent};
+    }
+  };
+
   this.toggleKmlLayer = function () {
     var isKmlLayerOnMap = this.isKmlLayerOnMap();
     if (isKmlLayerOnMap) {
       mapService.removeKmlLayer($scope.layer);
     } else {
-      mapService.addKmlLayer($scope.layer);
+      mapService.addKmlLayer($scope.layer, INFO_WINDOW_OPTIONS);
     }
     $scope.isKmlLayerOnMap = !isKmlLayerOnMap;
   };

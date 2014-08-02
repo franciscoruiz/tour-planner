@@ -60,7 +60,16 @@ mapServices.factory('directionsService', function ($q, $log) {
 });
 
 
-mapServices.factory('mapService', function ($rootScope, $log, $q, $templateCache, $compile, geocoderService, directionsService) {
+mapServices.factory('mapService', function (
+  $rootScope,
+  $log,
+  $q,
+  $templateCache,
+  $compile,
+  $window,
+  geocoderService,
+  directionsService
+) {
 
   var MapService = function (element, options) {
     this.map = new google.maps.Map(element, options);
@@ -105,25 +114,12 @@ mapServices.factory('mapService', function ($rootScope, $log, $q, $templateCache
     var promise = deferred.promise;
 
     // Attach default behaviour: on click present InfoWindow
-    var infoWindowTemplate = $compile($templateCache.get(infoWindowOptions.templateId));
     promise.then(function (searchResults) {
       angular.forEach(searchResults, function (searchResult) {
-        var scope = $rootScope.$new(true);
-
-        var geocoderResult = searchResult.geocoderResult;
-        angular.extend(scope, infoWindowOptions.templateContext(geocoderResult));
-
-        var compiledTemplate = infoWindowTemplate(scope);
-        var infoWindowContentElement;
-        if (compiledTemplate.length === 1) {
-          infoWindowContentElement = compiledTemplate[0];
-        } else {
-          $log.error('Template must contain a single element (tip: add top-level <div>)');
-        }
-        var infoWindow = new google.maps.InfoWindow({
-          content: compiledTemplate[0]
-        });
-
+        var infoWindow = self.createInfoWindow(
+          infoWindowOptions.templateId,
+          infoWindowOptions.templateContext(searchResult.geocoderResult)
+        );
         var marker = searchResult.marker;
         self.addEventListener(marker, 'click', function () {
           self.openInfoWindow(infoWindow, marker);
@@ -202,6 +198,31 @@ mapServices.factory('mapService', function ($rootScope, $log, $q, $templateCache
 
   // InfoWindows
 
+  MapService.prototype.createInfoWindow = function (templateId, templateContext, options) {
+    var infoWindowTemplate = $compile($templateCache.get(templateId));
+
+    var scope = $rootScope.$new(true);
+
+    angular.extend(scope, templateContext);
+
+    var compiledTemplate = infoWindowTemplate(scope);
+    var infoWindowContentElement;
+    if (compiledTemplate.length === 1) {
+      infoWindowContentElement = compiledTemplate[0];
+    } else {
+      $log.error('Template must contain a single element (tip: add top-level <div>)');
+    }
+
+    var maxWidth = $window.innerWidth - 55;
+    var infoWindowOptions = angular.extend(
+      {maxWidth: maxWidth},
+      options,
+      {content: compiledTemplate[0]}
+    );
+    var infoWindow = new google.maps.InfoWindow(infoWindowOptions);
+    return infoWindow;
+  };
+
   MapService.prototype.openInfoWindow = function (infoWindow, anchor) {
     infoWindow.open(this.map, anchor);
     return infoWindow;
@@ -209,12 +230,15 @@ mapServices.factory('mapService', function ($rootScope, $log, $q, $templateCache
 
   // KML layers
 
-  MapService.prototype.addKmlLayer = function (kmlLayer) {
+  MapService.prototype.addKmlLayer = function (kmlLayer, infoWindowOptions) {
     if (this.isLayerOnMap(kmlLayer)) {
       return;
     }
 
     var renderer = this.getLayerRenderer(kmlLayer);
+    if (angular.isUndefined(renderer)) {
+      renderer = this.createLayerRenderer(kmlLayer, infoWindowOptions);
+    }
     renderer.setMap(this.map);
   };
 
@@ -234,11 +258,35 @@ mapServices.factory('mapService', function ($rootScope, $log, $q, $templateCache
 
   MapService.prototype.getLayerRenderer = function (kmlLayer) {
     var kmlLayerId = kmlLayer.url;
-    var renderer = this.kmlLayerRenderers[kmlLayerId];
-    if (angular.isUndefined(renderer)) {
-      renderer = new google.maps.KmlLayer({url: kmlLayer.url});
-      this.kmlLayerRenderers[kmlLayerId] = renderer;
-    }
+    return this.kmlLayerRenderers[kmlLayerId];
+  };
+
+  MapService.prototype.createLayerRenderer = function (kmlLayer, infoWindowOptions) {
+    var kmlLayerId = kmlLayer.url;
+    var renderer = new google.maps.KmlLayer({
+      url: kmlLayer.url,
+      suppressInfoWindows: true
+    });
+    this.kmlLayerRenderers[kmlLayerId] = renderer;
+
+    var self = this;
+    var infoWindows = {};
+    this.addEventListener(renderer, 'click', function (kmlMouseEvent) {
+      var featureData = kmlMouseEvent.featureData;
+
+      var infoWindow = infoWindows[featureData.id];
+      if (angular.isUndefined(infoWindow)) {
+        infoWindow = self.createInfoWindow(
+          infoWindowOptions.templateId,
+          infoWindowOptions.templateContext(kmlMouseEvent),
+          {position: kmlMouseEvent.latLng}
+        );
+        infoWindows[featureData.id] = infoWindow;
+      }
+
+      self.openInfoWindow(infoWindow);
+    });
+
     return renderer;
   };
 

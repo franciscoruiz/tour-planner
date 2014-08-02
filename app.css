@@ -60,6 +60,10 @@ html, body, #map-canvas {
     line-height: 28px;
     font-size: 13px;
   }
+
+  .info-window {
+    height: 200px;
+  }
 }
 
 /* Non-mobile specific */
