@@ -17,6 +17,7 @@
     <script src="services.js"></script>
     <script src="controllers.js"></script>
     <script src="filters.js"></script>
+    <script src="directives.js"></script>
     <script src="resources.js"></script>
   </head>
   <body>
@@ -26,11 +27,7 @@
         ng-init="showMenu = true"
         ng-click="showMenu = !showMenu"
     ></div>
-    <div
-        class="overmap_panel"
-        ng-show="showMenu"
-        ng-view
-    ></div>
+    <menu ng-show="showMenu" ng-view></menu>
     <div id="map-canvas"></div>
   </body>
 </html>

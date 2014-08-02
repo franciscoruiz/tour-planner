@@ -4,11 +4,6 @@ var controllers = angular.module('planner.controllers', []);
 
 controllers.controller('IndexCtrl', function ($scope, mapService, Route, KmlLayer) {
   $scope.routes = Route.query();
-
-  $scope.reloadRoutes = function () {
-    $scope.routes = Route.query();
-  };
-
   $scope.kmlLayers = KmlLayer.query();
 });
 
@@ -21,15 +16,21 @@ controllers.controller('RouteViewCtrl', function ($scope, $routeParams, Route) {
 
 
 controllers.controller('RouteCtrl', function ($scope, $log, $location, mapService, Route) {
+
   this.logRouteDetails = function () {
     $log.debug($scope.route);
   };
-  this.showRoute = function () {
-    mapService.addRoute($scope.route);
+
+  this.toggleRoute = function () {
+    var isRouteOnMap = this.isRouteOnMap();
+    if (isRouteOnMap) {
+      mapService.removeRoute($scope.route);
+    } else {
+      mapService.addRoute($scope.route);
+    }
+    $scope.isRouteOnMap = !isRouteOnMap;
   };
-  this.hideRoute = function () {
-    mapService.removeRoute($scope.route);
-  };
+
   this.isRouteOnMap = function () {
     return mapService.isRouteOnMap($scope.route);
   };
@@ -49,6 +50,9 @@ controllers.controller('RouteCtrl', function ($scope, $log, $location, mapServic
       });
     }
   };
+
+  $scope.isRouteOnMap = this.isRouteOnMap();
+
 
   // Steps-related logic
 
@@ -296,16 +300,22 @@ controllers.controller('MapCtrl', function ($scope, mapService) {
 
 controllers.controller('KmlLayerCtrl', function ($scope, mapService) {
 
-  this.showKmlLayer = function () {
-    mapService.addKmlLayer($scope.layer);
+  this.toggleKmlLayer = function () {
+    var isKmlLayerOnMap = this.isKmlLayerOnMap();
+    if (isKmlLayerOnMap) {
+      mapService.removeKmlLayer($scope.layer);
+    } else {
+      mapService.addKmlLayer($scope.layer);
+    }
+    $scope.isKmlLayerOnMap = !isKmlLayerOnMap;
   };
 
-  this.hideKmlLayer = function () {
-    mapService.removeKmlLayer($scope.layer);
-  };
 
   this.isKmlLayerOnMap = function () {
     return mapService.isLayerOnMap($scope.layer);
   };
+
+
+  $scope.isKmlLayerOnMap = this.isKmlLayerOnMap();
 
 });

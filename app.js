@@ -3,6 +3,7 @@ angular.module('planner', [
   'planner.resources',
   'planner.controllers',
   'planner.filters',
+  'planner.directives',
   'map.services'
 ]).config(function ($routeProvider) {
   $routeProvider
