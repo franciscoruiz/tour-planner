@@ -27,11 +27,11 @@ html, body, #map-canvas {
   menu>div {
     background-color: white;
     padding-left: 6px;
+    padding-bottom: 5px;
   }
 
   menu .item-title {
-    display: inline;
-    width: 100%;
+    width: 96%;
   }
 
   menu .item-title.active {
@@ -42,6 +42,10 @@ html, body, #map-canvas {
     display: inline;
     position: absolute;
     right: 10px;
+  }
+
+  menu input {
+    width: 100%;
   }
 
   #menu-toggle {

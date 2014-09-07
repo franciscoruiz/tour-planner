@@ -1,6 +1,19 @@
 <div>
   <h2>
     <div class="item-title">
+      Search
+    </div>
+  </h2>
+  <div class="item-title">
+    <form ng-submit="indexCtrl.search()">
+      <input type="text" ng-model="searchTerm">
+    </form>
+  </div>
+</div>
+
+<div>
+  <h2>
+    <div class="item-title">
       Other maps
       <span>({{ kmlLayers.length }})</span>
     </div>
@@ -26,9 +39,6 @@
     <div class="item-title">
       Routes
       <span>({{ routes.length }})</span>
-    </div>
-    <div class="item-actions">
-      <a href="#/new-route/" class="btn fa fa-plus"></a>
     </div>
   </h2>
   <ul>

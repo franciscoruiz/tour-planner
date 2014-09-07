@@ -3,6 +3,11 @@ var controllers = angular.module('planner.controllers', []);
 
 
 controllers.controller('IndexCtrl', function ($scope, $location, Route, KmlLayer) {
+
+  this.search = function () {
+    $location.url('/new-route/?q=' + $scope.searchTerm);
+  };
+
   $scope.routes = Route.query();
   $scope.kmlLayers = KmlLayer.query();
 });
@@ -110,7 +115,6 @@ controllers.controller('NewRouteCtrl', function ($scope, $location, $filter, map
     resetDirectionsRenderer();
 
     $scope.points = [];
-    this.addPoint();
   };
 
   var resetDirectionsRenderer = function () {
@@ -217,12 +221,18 @@ controllers.controller('NewRouteCtrl', function ($scope, $location, $filter, map
 
   this.reset();
 
-  if (angular.isDefined($location.search().from)) {
+  if (angular.isDefined($location.search().q)) {
+    this.addPoint($location.search().q);
+    this.search();
+  } else if (angular.isDefined($location.search().from)) {
     this.addPoint($location.search().from);
     var self = this;
     angular.forEach($location.search().to, function (location) {
       self.addPoint(location);
     });
+    this.search();
+  } else {
+    this.addPoint();
   }
 });
 

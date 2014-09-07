@@ -9,7 +9,8 @@ angular.module('planner', [
   $routeProvider
     .when('/', {
       templateUrl: 'templates/index.html',
-      controller: 'IndexCtrl'
+      controller: 'IndexCtrl',
+      controllerAs: 'indexCtrl'
     })
     .when('/new-route/', {
       templateUrl: 'templates/route-creation.html',

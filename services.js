@@ -94,8 +94,8 @@ mapServices.factory('mapService', function (
     var deferred = $q.defer();
 
     var self = this;
-    var viewportBounds = this.map.getBounds();
     geocoderService.geocode(address).then(function (geocoderResults) {
+      var viewportBounds = self.map.getBounds();
       var searchResults = [];
       angular.forEach(geocoderResults, function (geocoderResult) {
         var location = geocoderResult.geometry.location;
