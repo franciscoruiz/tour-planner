@@ -5,7 +5,7 @@ directives.directive('menu', function ($window) {
 	var link = function (scope, element, attrs) {
 		var windowHeight = $window.innerHeight;
 		console.log('Setting menu height to %spx', windowHeight)
-		element.css('height', windowHeight + 'px');
+		element.css('max-height', windowHeight + 'px');
 		console.log(element, element.css('height'));
 	};
 
