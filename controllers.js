@@ -2,7 +2,7 @@
 var controllers = angular.module('planner.controllers', []);
 
 
-controllers.controller('IndexCtrl', function ($scope, mapService, Route, KmlLayer) {
+controllers.controller('IndexCtrl', function ($scope, $location, Route, KmlLayer) {
   $scope.routes = Route.query();
   $scope.kmlLayers = KmlLayer.query();
 });
