@@ -10,3 +10,17 @@ directives.directive('menu', function ($window, $log) {
 
   return {link: link};
 });
+
+
+directives.directive('menuGroup', function () {
+  var link = function (scope) {
+    scope.isCounterDefined = angular.isDefined(scope.counter);
+  };
+
+  return {
+    scope: {title: '@', counter: '='},
+    transclude: true,
+    templateUrl: '/partials/menu-group.html',
+    link: link
+  };
+});
