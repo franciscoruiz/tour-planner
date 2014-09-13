@@ -79,7 +79,7 @@ html, body, #map-canvas {
     max-width: 320px;
   }
 
-  menu>div {
+  menu-group>div {
     padding: 1px 8px;
     border-width:2px;
     background-color: white;
