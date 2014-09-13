@@ -1,6 +1,6 @@
 <menu-group title="Search">
-  <form ng-submit="indexCtrl.search()">
-    <input type="text" ng-model="searchTerm">
+  <form ng-submit="indexCtrl.search(searchTerm)">
+    <input type="text" ng-model="searchTerm" required>
   </form>
 </menu-group>
 

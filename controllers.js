@@ -4,8 +4,8 @@ var controllers = angular.module('planner.controllers', []);
 
 controllers.controller('IndexCtrl', function ($scope, $location, Route, KmlLayer) {
 
-  this.search = function () {
-    $location.url('/new-route/?q=' + $scope.searchTerm);
+  this.search = function (searchTerm) {
+    $location.url('/new-route/?q=' + encodeURIComponent(searchTerm));
   };
 
   $scope.routes = Route.query();
