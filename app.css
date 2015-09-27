@@ -13,6 +13,10 @@ html, body, #map-canvas {
   width: 100%;
 }
 
+menu .item-title {
+  cursor: pointer;
+}
+
 menu .item-title.active {
   font-weight: bold;
 }

@@ -211,14 +211,16 @@ mapServices.factory('mapService', function (
       infoWindowContentElement = compiledTemplate[0];
     } else {
       $log.error('Template must contain a single element (tip: add top-level <div>)');
+      return;
     }
 
     var maxWidth = $window.innerWidth - 55;
     var infoWindowOptions = angular.extend(
       {maxWidth: maxWidth},
       options,
-      {content: compiledTemplate[0]}
+      {content: infoWindowContentElement}
     );
+    // Replace google.maps.InfoWindow with custom pop-up
     var infoWindow = new google.maps.InfoWindow(infoWindowOptions);
     return infoWindow;
   };
