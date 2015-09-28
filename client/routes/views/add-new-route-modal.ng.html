@@ -1,0 +1,31 @@
+<md-dialog aria-label="Add Route">
+  <form>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2> Create a new route</h2>
+        <span flex></span>
+      </div>
+    </md-toolbar>
+    <md-dialog-content style="min-width:300px;max-width:800px;max-height:810px; ">
+      <div ng-show="$root.currentUser">
+        <md-input-container>
+          <label>Name</label>
+          <input ng-model="newRoute.name" id="nameInput" type="text" aria-label="Name">
+        </md-input-container>
+        <md-input-container>
+          <label>Description</label>
+          <input ng-model="newRoute.description" id="description" type="text" aria-label="Description">
+        </md-input-container>
+      </div>
+    </md-dialog-content>
+    <div class="md-actions" layout="row">
+      <span flex></span>
+      <md-button ng-click="close()">
+        Close
+      </md-button>
+      <md-button ng-click="addNewRoute()" style="margin-right:20px;">
+        Add
+      </md-button>
+    </div>
+  </form>
+</md-dialog>

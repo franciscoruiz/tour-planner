@@ -1,0 +1,46 @@
+<md-content flex-gt-sm layout-gt-sm="row" class="ma-routes-list">
+  <div layout-gt-sm="row" flex-gt-sm>
+    <div flex-gt-sm="50" flex-sm>
+      <div>
+        <div layout-padding layout="row">
+          <md-input-container style="width:50%;margin-right:10px;">
+            <label>Search</label>
+            <input type="text" ng-model="search"/>
+          </md-input-container>
+          <md-select ng-model="orderProperty" placeholder="Sort Order" >
+            <md-option value="1">Ascending</md-option>
+            <md-option value="-1">Descending</md-option>
+          </md-select>
+          <md-button class="md-fab" aria-label="Eat cake" ng-click="openAddNewRouteModal()">
+            <md-icon md-font-set="material-icons"> add </md-icon>
+          </md-button>
+        </div>
+      </div>
+      <md-content class="md-padding" style="padding-top:0;">
+        <div ng-repeat="route in routes" class="ma-route">
+          <md-card>
+            <md-card-content>
+              <h2 class="md-title ma-name"><a href="/routes/{{route._id}}">{{route.name}}</a></h2>
+              <p class="ma-description" style="padding:0 10px;margin-bottom:35px;margin-top: 6px;">{{route.description}}</p>
+              <div layout="row">
+                <div flex="1">
+                  <p style="margin-top:0px;margin-bottom:3px;font-size:14px;color:#aaa;">
+                    <small>Posted by {{ creator(route) | displayName }}</small>
+                  </p>
+                </div>
+              </div>
+            </md-card-content>
+          </md-card>
+        </div>
+      </md-content>
+
+    </div>
+    <div flex-gt-sm="50" flex-sm layout="row" style="min-height:300px;">
+      <ui-gmap-google-map options="map.options" center="map.center" zoom="map.zoom" flex layout="row">
+        <ui-gmap-markers models="routes" coords="'location'" click="onClicked()"
+                         fit="true" idkey="'_id'" doRebuildAll="true">
+        </ui-gmap-markers>
+      </ui-gmap-google-map>
+    </div>
+  </div>
+</md-content>
